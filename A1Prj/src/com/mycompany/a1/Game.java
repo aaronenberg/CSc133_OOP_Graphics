@@ -1,14 +1,16 @@
 package com.mycompany.a1;
 
+
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.TextField;
-
 import java.lang.String;
 
+
 public class Game extends Form {
+
     private GameWorld gw;
 	
     public Game() {
