@@ -26,8 +26,6 @@ public class Starter {
         // Enable Toolbar on all Forms by default
         Toolbar.setGlobalToolbar(true);
 
-        // Pro only feature, uncomment if you have a pro subscription
-        // Log.bindCrashProtection(true);
     }
     
     public void start() {
@@ -35,9 +33,7 @@ public class Starter {
             current.show();
             return;
         }
-        Form hi = new Form("Hi World");
-        hi.addComponent(new Label("Hi World"));
-        hi.show();
+        new Game();
     }
 
     public void stop() {
