@@ -6,6 +6,7 @@
 .metadata
 */bin/
 */tmp/
+*/icon.png
 *.tmp
 *.bak
 *.swp
