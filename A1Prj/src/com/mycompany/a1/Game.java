@@ -9,31 +9,52 @@ import com.codename1.ui.TextField;
 import java.lang.String;
 
 
-public class Game extends Form {
+public class
+Game extends Form
+{
 
     private GameWorld gw;
 	
-    public Game() {
+    public
+    Game()
+    {
         gw = new GameWorld();
         gw.init();
         play();
     }
 	
-    private void play() {
-        Label myLabel = new Label("Enter a Command:");
-        this.addComponent(myLabel);
-        final TextField myTextField = new TextField();
-        this.addComponent(myTextField);
+    private void
+    play()
+    {
+        Label label = new Label("Enter a Command:");
+        this.addComponent(label);
+        final TextField commandField = new TextField();
+        this.addComponent(commandField);
         this.show();
 
-        myTextField.addActionListener(
-            new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    String sCommand = myTextField.getText().toString();
-                    myTextField.clear();
-                    switch (sCommand.charAt(0)) {
+        commandField.addActionListener
+        (
+            new ActionListener()
+            {
+                public void
+                actionPerformed(ActionEvent evt)
+                {
+                    String command = commandField.getText().toString();
+                    commandField.clear();
+                    switch (command.charAt(0))
+                    {
                         case 'e':
                             gw.expand();
+                            break;
+                        case 'x':
+                            System.out.println("Do you want to exit? (y) yes, (n) no.");
+                            break;
+                        case 'y':
+                            System.exit(0);
+                        case 'n':
+                            break;
+                        default:
+                            System.out.println("Unknown command given... Ignoring input.");
                             break;
                     }
                 }
