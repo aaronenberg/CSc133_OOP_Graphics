@@ -19,7 +19,7 @@ GameObject
     public
     GameObject()
     {
-        location = new Point();
+        this.location = new Point();
         setLocation(randomX(), randomY());
     }
 
@@ -31,11 +31,18 @@ GameObject
     setColor(int r, int g, int b);
 
 
-    public abstract Point
-    getLocation();
+    public Point
+    getLocation()
+    {
+        return this.location;
+    }
 
-    public abstract void
-    setLocation(float x, float y);
+    public void
+    setLocation(float x, float y)
+    {
+        this.location.setX(x);
+        this.location.setY(y);
+    }
 
     /*
      * Random.nextFloat() value ranges from 0.0 to 1.0 (inclusive),

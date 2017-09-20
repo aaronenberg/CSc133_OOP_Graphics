@@ -1,7 +1,6 @@
 package com.mycompany.a1;
 
 
-import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 import java.util.Random;
 import java.lang.Math;
@@ -16,9 +15,7 @@ public abstract class Opponent extends GameObject implements IMoveable {
     private int speed;
     private int color;
     private int direction;
-    private Random randomDegree;
-    private Random randomSize;
-    private Point location = new Point();
+    private Random randomDegree, randomSize;
     
     
     public
@@ -63,19 +60,6 @@ public abstract class Opponent extends GameObject implements IMoveable {
         return randomSize.nextInt(MAX_OPP_SIZE - MIN_OPP_SIZE) + MIN_OPP_SIZE;
     }
 
-    public Point
-    getLocation()
-    {
-        return this.location;
-    }
-
-    public void
-    setLocation(float x, float y)
-    {
-        this.location.setX(x);
-        this.location.setY(y);
-    }
-
     private int
     randomizeDirection()
     {
@@ -96,8 +80,8 @@ public abstract class Opponent extends GameObject implements IMoveable {
     {
         double deltaX = Math.cos(turningAngle()) * this.speed;
         double deltaY = Math.sin(turningAngle()) * this.speed;
-        float x = (float)(this.location.getX() + deltaX);
-        float y = (float)(this.location.getX() + deltaY);
+        float x = (float)(getLocation().getX() + deltaX);
+        float y = (float)(getLocation().getY() + deltaY);
         setLocation(x, y);
     }
 
