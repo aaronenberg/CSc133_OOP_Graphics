@@ -13,7 +13,6 @@ public abstract class Opponent extends GameObject implements IMoveable {
     private static final int MAX_OPP_SIZE = 50;
     private static final int DEGREES_OPP_DIRECTION = 359;
     private static final int DEGREES_TURN_AMOUNT = 90;
-    private final int size;
     private int speed;
     private int color;
     private int direction;
@@ -26,7 +25,6 @@ public abstract class Opponent extends GameObject implements IMoveable {
     Opponent()
     {
         super();
-        this.size = randomizeSize();
         this.direction = randomizeDirection();
     }
 
@@ -44,19 +42,20 @@ public abstract class Opponent extends GameObject implements IMoveable {
     }
 
 
-    public int
-    getSize()
-    {
-        return this.size;
-    }
-
     public void
     setSize(int newSize)
     {}
 
-    // Random.nextInt() range starts from 0,
-    // so we add MIN_OPP_SIZE to raise the lower bound,
-    // and we subtract it from MAX_OPP_SIZE to stay within upper bound
+    public int
+    getSize()
+    {
+        return randomizeSize();
+    }
+ 
+    /*
+     * We subtract MIN_OPP_SIZE from MAX_OPP_SIZE to stay within upper bound
+     * after adding MIN_OPP_SIZE to raise the lower bound.
+     */
     private int
     randomizeSize()
     {

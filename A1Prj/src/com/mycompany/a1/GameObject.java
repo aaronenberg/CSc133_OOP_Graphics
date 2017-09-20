@@ -10,7 +10,8 @@ GameObject
 {
 
     private static final float WORLD_MAX_WIDTH = (float) 1024.0;
-    private static final float WORLD_MAX_HEIGHT = (float) 768.0; 
+    private static final float WORLD_MAX_HEIGHT = (float) 768.0;
+    private int size;
     private Point location;
     private Random rX, rY;
 
@@ -36,9 +37,10 @@ GameObject
     public abstract void
     setLocation(float x, float y);
 
-
-    // Random.nextFloat() value ranges from 0.0 to 1.0 (inclusive),
-    // so we multiply by the X and Y limits of game world
+    /*
+     * Random.nextFloat() value ranges from 0.0 to 1.0 (inclusive),
+     * so we multiply by the X and Y limits of game world
+     */
     private float
     randomX()
     {
@@ -56,11 +58,16 @@ GameObject
     }
 
 
-    public abstract int
-    getSize();
+    public int
+    getSize()
+    {
+        return this.size;
+    }
 
-    public abstract void
-    setSize(int newSize);
-
+    public void
+    setSize(int newSize)
+    {
+        this.size = newSize;
+    }
 
 }
