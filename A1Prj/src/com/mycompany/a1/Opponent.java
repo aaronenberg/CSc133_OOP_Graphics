@@ -13,7 +13,6 @@ public abstract class Opponent extends GameObject implements IMoveable {
     private static final int DEGREES_OPP_DIRECTION = 359;
     private static final int DEGREES_TURN_AMOUNT = 90;
     private int speed;
-    private int color;
     private int direction;
     private Random randomDegree, randomSize;
     
@@ -26,23 +25,12 @@ public abstract class Opponent extends GameObject implements IMoveable {
     }
 
 
-    public int
-    getColor() 
-    {
-        return this.color;
-    }
-
-    public void
-    setColor(int r, int g, int b)
-    {
-        this.color = ColorUtil.rgb(r, g, b);
-    }
-
-
+    @Override
     public void
     setSize(int newSize)
     {}
-
+    
+    @Override
     public int
     getSize()
     {

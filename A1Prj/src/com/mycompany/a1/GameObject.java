@@ -2,6 +2,8 @@ package com.mycompany.a1;
 
 
 import com.codename1.charts.models.Point;
+import com.codename1.charts.util.ColorUtil;
+
 import java.util.Random;
 
 
@@ -12,6 +14,7 @@ GameObject
     private static final float WORLD_MAX_WIDTH = (float) 1024.0;
     private static final float WORLD_MAX_HEIGHT = (float) 768.0;
     private int size;
+    private int color;
     private Point location;
     private Random rX, rY;
 
@@ -24,11 +27,17 @@ GameObject
     }
 
 
-    public abstract int
-    getColor();
+    public int
+    getColor() 
+    {
+        return this.color;
+    }
 
-    public abstract void
-    setColor(int r, int g, int b);
+    public void
+    setColor(int r, int g, int b)
+    {
+        this.color = ColorUtil.rgb(r, g, b);
+    }
 
 
     public Point
