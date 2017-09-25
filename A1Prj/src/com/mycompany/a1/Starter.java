@@ -24,7 +24,8 @@ Starter
     public void
     init(Object context)
     {
-        theme = UIManager.initFirstTheme("/theme");
+        // was throwing IOException because no theme currently
+        //theme = UIManager.initFirstTheme("/theme");
         
         // Enable Toolbar on all Forms by default
         Toolbar.setGlobalToolbar(true);
