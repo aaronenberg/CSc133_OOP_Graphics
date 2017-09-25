@@ -18,7 +18,6 @@ import java.io.IOException;
 public class
 Starter
 {
-
     private Form current;
     private Resources theme;
 
@@ -26,10 +25,9 @@ Starter
     init(Object context)
     {
         theme = UIManager.initFirstTheme("/theme");
-
+        
         // Enable Toolbar on all Forms by default
         Toolbar.setGlobalToolbar(true);
-
     }
     
     public void
@@ -54,8 +52,5 @@ Starter
     
     public void
     destroy()
-    {
-
-    }
-
+    {}
 }

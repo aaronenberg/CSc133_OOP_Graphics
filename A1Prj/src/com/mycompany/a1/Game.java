@@ -52,14 +52,18 @@ Game extends Form
                             System.out.println("The spaceship has transferred to a randomly selected astronaut.");
                             break;
                         case 'e':
-                            gw.expandSpaceshipDoor();
-                            System.out.println("The spaceship door expands.");
+                            if(gw.expandSpaceshipDoor())
+                                System.out.println("The spaceship door expands.");
+                            else
+                                System.out.println("ERROR: The size of the spaceship door is already reached its maximum."
+                                                 + " Expand failed.");
                             break;
                         case 'c':
                             if (gw.contractSpaceshipDoor())
                                 System.out.println("The spaceship door contracts.");
                             else
-                                System.out.println("ERROR: The size of the spaceship door is already at its minimum. Contract failed.");
+                                System.out.println("ERROR: The size of the spaceship door is already reached its minimum."
+                                                 + " Contract failed.");
                             break;
                         case 'r':
                             gw.moveSpaceshipRight();
@@ -103,7 +107,7 @@ Game extends Form
                             break;
                         case 'f':
                             if (gw.fight() == true)
-                                System.out.println("A fight breaks out between alien and astronaut..."
+                                System.out.println("A fight breaks out between alien and astronaut... "
                                                   + "The astronaut's health has decreased.");
                             else
                                 System.out.println("ERROR: There are no aliens remaining to fight.");
@@ -115,7 +119,7 @@ Game extends Form
                             if (gw.aliensCollide() == true)
                                 System.out.println("Two aliens collide... A new alien has spawned!");
                             else
-                                System.out.println("ERROR: There are less than two aliens remaining."
+                                System.out.println("ERROR: There are less than two aliens remaining. "
                                                   + "There can not be a collision.");
                             break;
                         default:

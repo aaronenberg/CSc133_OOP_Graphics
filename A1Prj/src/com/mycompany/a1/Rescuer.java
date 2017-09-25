@@ -14,25 +14,25 @@ Rescuer extends GameObject implements IGuided
     public void
     moveLeft()
     {
-       setLocation(getLocation().getX() - MOVE_SPACESHIP, getLocation().getY()); 
+       setLocation(getX() - MOVE_SPACESHIP, getY()); 
     }
 
     public void
     moveRight()
     {
-        setLocation(getLocation().getX() + MOVE_SPACESHIP, getLocation().getY());
+        setLocation(getX() + MOVE_SPACESHIP, getY());
     }
 
     public void
     moveUp()
     {
-        setLocation(getLocation().getX(), getLocation().getY() + MOVE_SPACESHIP);
+        setLocation(getX(), getY() + MOVE_SPACESHIP);
     }
 
     public void
     moveDown()
     {
-        setLocation(getLocation().getX(), getLocation().getY() - MOVE_SPACESHIP);
+        setLocation(getX(), getY() - MOVE_SPACESHIP);
     }
 
     public void

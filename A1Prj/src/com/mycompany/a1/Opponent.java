@@ -14,7 +14,7 @@ Opponent extends GameObject implements IMoving
     private static final int DEGREES_OPP_DIRECTION = 359;
     private static final int COMPASS_OFFSET = 90;
     private static final int SPEED_CONSTANT = 1;
-    private static final int SMALL_DEGREE = 2;
+    private static final int SMALL_DEGREE = 3;
     private int speed = SPEED_CONSTANT;
     private int direction;
     private Random random, randomDegree, randomSize;
@@ -33,6 +33,11 @@ Opponent extends GameObject implements IMoving
     setSize(int newSize)
     {}
     
+    /*
+     * randomly pick a number between 3 and 6 (inclusive),
+     * depending on if its odd or even, direction increases or decreases
+     * by that amount provided it keeps us within limits of direction
+     */
     private void
     skewDirection()
     {

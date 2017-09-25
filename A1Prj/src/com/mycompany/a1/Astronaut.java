@@ -40,6 +40,7 @@ Astronaut extends Opponent
         setColor(r, g - FADE_GREEN, b);   
     }
 
+    // called by GameWorld.fight()
     public void
     collidesWithAlien()
     {
@@ -62,9 +63,8 @@ Astronaut extends Opponent
         return "Astronaut: " + opponentString + " health=" + getHealth();
     }
     
-    /*
-     * if health is 0, do not allow opponent to move
-     */
+
+     // if health is 0, do not allow opponent to move
     public void
     move()
     {
