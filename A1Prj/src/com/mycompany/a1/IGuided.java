@@ -16,6 +16,6 @@ public interface IGuided {
     moveDown();
 
     public void
-    jumpToLocation();
+    jumpToLocation(float x, float y);
 
 }

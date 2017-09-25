@@ -43,8 +43,47 @@ Game extends Form
                     commandField.clear();
                     switch (command.charAt(0))
                     {
+                        case 'a':
+                            gw.transferSpaceshipToAlien();
+                            System.out.println("The spaceship has transferred to a randomly selected alien.");
+                            break;
+                        case 'o':
+                            gw.transferSpaceshipToAstronaut();
+                            System.out.println("The spaceship has transferred to a randomly selected astronaut.");
+                            break;
                         case 'e':
-                            gw.expand();
+                            gw.expandSpaceshipDoor();
+                            System.out.println("The spaceship door expands.");
+                            break;
+                        case 'c':
+                            if (gw.contractSpaceshipDoor())
+                                System.out.println("The spaceship door contracts.");
+                            else
+                                System.out.println("ERROR: The size of the spaceship door is already at its minimum. Contract failed.");
+                            break;
+                        case 'r':
+                            gw.moveSpaceshipRight();
+                            System.out.println("The spaceship moves right.");
+                            break;
+                        case 'l':
+                            gw.moveSpaceshipLeft();
+                            System.out.println("The spaceship moves left.");
+                            break;
+                        case 'u':
+                            gw.moveSpaceshipUp();
+                            System.out.println("The spaceship moves up.");
+                            break;
+                        case 'd':
+                            gw.moveSpaceshipDown();
+                            System.out.println("The spaceship moves down.");
+                            break;
+                        case 's':
+                            gw.openSpaceshipDoor();
+                            System.out.println("The spaceship door opens.");
+                            gw.rescue();
+                            System.out.println("Current score: " + gw.getScore());
+                            gw.closeSpaceshipDoor();
+                            System.out.println("The door automatically shuts.");
                             break;
                         case 'x':
                             System.out.println("Do you want to exit? (y) yes, (n) no.");
@@ -53,9 +92,39 @@ Game extends Form
                             System.exit(0);
                         case 'n':
                             break;
+                        case 'm':
+                            System.out.println("Here is the current world state: \n");
+                            gw.map();
+                            System.out.print("\n");
+                            break;
+                        case 't':
+                            gw.tick();
+                            System.out.println("The clock has ticked. All opponents have moved.");
+                            break;
+                        case 'f':
+                            if (gw.fight() == true)
+                                System.out.println("A fight breaks out between alien and astronaut..."
+                                                  + "The astronaut's health has decreased.");
+                            else
+                                System.out.println("ERROR: There are no aliens remaining to fight.");
+                            break;
+                        case 'p':
+                            System.out.println(gw.toString());
+                            break;
+                        case 'w':
+                            if (gw.aliensCollide() == true)
+                                System.out.println("Two aliens collide... A new alien has spawned!");
+                            else
+                                System.out.println("ERROR: There are less than two aliens remaining."
+                                                  + "There can not be a collision.");
+                            break;
                         default:
                             System.out.println("Unknown command given... Ignoring input.");
                             break;
+                    }
+                    if (gw.getAstronautsRemaining() == 0) {
+                        System.out.println("All astronauts rescued! The game has ended.");
+                        System.exit(0);
                     }
                 }
             }

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+java -cp /home/aaron/dev/eclipse-workspace/CSc133_OOP_Graphics/A1Prj/dist/A1Prj.jar:/home/aaron/dev/eclipse-workspace/CSc133_OOP_Graphics/A1Prj/JavaSE.jar com.codename1.impl.javase.Simulator com.mycompany.a1.Starter

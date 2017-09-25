@@ -1,15 +1,25 @@
 package com.mycompany.a1;
 
-import com.codename1.charts.util.ColorUtil;
+
 public class
 Alien extends Opponent
 {
-    private static int SPEED_MULTIPLIER = 1;
-    private static int ALIEN_COLOR = ColorUtil.BLUE;
+    private static final int SPEED_MULTIPLIER = 5;
+    private static final int HINT_OF_GREEN = 15;
+    private static final int DARK_BLUE = 128;
+    private static final int ZERO_RED = 0;
     public
     Alien()
     {
         super();
+        super.setColor(ZERO_RED, HINT_OF_GREEN, DARK_BLUE);
+    }
+    
+    public
+    Alien(float x, float y)
+    {
+        this();
+        setLocation(x, y);
     }
 
     
@@ -18,9 +28,20 @@ Alien extends Opponent
     setColor(int r, int g, int b) 
     {}
 
-    public void
-    setSpeed()
+    public int
+    getSpeed()
     {
+        return super.getSpeed() * SPEED_MULTIPLIER;
         
+    }
+    public void
+    setSpeed(int spd)
+    {}
+    
+    public String
+    toString()
+    {
+        String opponentString = super.toString();
+        return "    Alien: " + opponentString;
     }
 }
