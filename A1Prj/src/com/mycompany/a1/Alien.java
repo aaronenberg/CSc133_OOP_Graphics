@@ -1,5 +1,9 @@
 package com.mycompany.a1;
 
+/*
+ * Alien is a concrete sublcass of Opponent. Its purpose is to
+ * define the behaviors and characteristics of an alien instance.
+ */
 
 public class
 Alien extends Opponent

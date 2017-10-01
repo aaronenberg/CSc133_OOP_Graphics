@@ -4,6 +4,15 @@ package com.mycompany.a1;
 import java.util.Random;
 import java.lang.Math;
 
+/*
+ * Opponent is an abstract class which defines the behaviors and
+ * characteristics common between its concrete subclasses 
+ * Alien and Astronaut. It implements the move method from
+ * the IMoving interface given an opponent's speed and direction.
+ * skewDirection() keeps an opponent from moving in a straight line.
+ * if an opponent hits a wall changeDirection() turns them in the
+ * opposite direction.
+ */
 
 public abstract class
 Opponent extends GameObject implements IMoving

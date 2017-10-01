@@ -5,7 +5,14 @@ import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
 import java.util.Random;
 
-
+/*
+ * GameObject is an abstract class which defines the behaviors and
+ * characteristics common between all Opponents and Rescuers including:
+ * color, location and size. Every GameObject instance is given a 
+ * random location that is within the world limits. Methods such as
+ * centerHitEdge() and xAtMaxWidth() prevent GameObjects, except
+ * spaceship, from moving or spawning outside of world limits.
+ */
 public abstract class
 GameObject
 {

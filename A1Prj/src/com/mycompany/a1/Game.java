@@ -9,6 +9,16 @@ import com.codename1.ui.TextField;
 import java.lang.String;
 
 
+/*
+ * Game is the controller which enforces rules as to what
+ * commands a user can issue while playing the game.
+ * It instantiates a GameWorld and calls its init() to 
+ * populate the game with GameObjects. play() is responsible
+ * for prompting the user for input and taking certain actions
+ * based on that input. Most of these actions are calls to 
+ * GameWorld methods. When there are no more astronauts remaining,
+ * the game ends.
+ */
 public class
 Game extends Form
 {

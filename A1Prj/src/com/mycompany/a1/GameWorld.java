@@ -4,6 +4,21 @@ import java.util.ArrayList;
 import java.util.Random;
 import com.codename1.charts.models.Point;
 
+
+/*
+ * GameWorld is our model which provides the user with
+ * the methods to directly manipulate the GameObject
+ * instances. It also keeps track of the game's state
+ * including number of astronauts and aliens remaining,
+ *  number of astronauts and aliens that got into the 
+ *  spaceship and the total points earned.
+ *  It is responsible for instantiating all GameObjects
+ *  at the start of the game and creating or removing
+ *  GameObjects during certain events in the game.
+ *  The user can see the state of all GameObject instances
+ *  by calling map().
+ */
+
 public class
 GameWorld
 {

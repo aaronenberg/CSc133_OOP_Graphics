@@ -1,6 +1,11 @@
 package com.mycompany.a1;
 
 
+/*
+ * interface which allows the user to
+ * control the movement of a Rescuer subclass.
+ */
+
 public interface IGuided {
 
     public void

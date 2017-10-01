@@ -2,6 +2,15 @@ package com.mycompany.a1;
 
 import com.codename1.charts.util.ColorUtil;
 
+
+/*
+ * Astronaut is a concrete sublcass of Opponent. Its purpose is to
+ * define the behaviors and characteristics of an astronaut instance.
+ * Astronauts have a health attribute to which its speed and color
+ * are directly correlated. An astronaut that collides with and alien
+ * loses 1 health. When their health reaches 0, they are unable to move.
+ */
+
 public class
 Astronaut extends Opponent
 {

@@ -1,5 +1,12 @@
 package com.mycompany.a1;
 
+
+/*
+ * Spaceship is a concrete sublcass of Rescuer. Its purpose is to
+ * define the behaviors and characteristics of a spaceship instance.
+ * the size of the spaceship refers to the size of its door which
+ * can be contracted, expanded, opened and closed.
+ */
 public class
 Spaceship extends Rescuer
 {
