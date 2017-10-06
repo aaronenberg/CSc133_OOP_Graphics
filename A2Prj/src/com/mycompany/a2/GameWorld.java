@@ -2,7 +2,6 @@ package com.mycompany.a2;
 
 import java.util.ArrayList;
 import java.util.Random;
-import com.codename1.charts.models.Point;
 
 
 /*

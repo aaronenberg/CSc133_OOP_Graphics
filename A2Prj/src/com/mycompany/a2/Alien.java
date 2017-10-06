@@ -1,7 +1,7 @@
 package com.mycompany.a2;
 
 /*
- * Alien is a concrete sublcass of Opponent. Its purpose is to
+ * Alien is a concrete subclass of Opponent. Its purpose is to
  * define the behaviors and characteristics of an alien instance.
  */
 
