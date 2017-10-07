@@ -1,6 +1,8 @@
 package com.mycompany.a2;
 
+
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
 
@@ -19,7 +21,7 @@ import java.util.Random;
  */
 
 public class
-GameWorld
+GameWorld extends Observable
 {
     private static final int INIT_ALIENS = 3;
     private static final int INIT_ASTRONAUTS = 4;
@@ -29,55 +31,23 @@ GameWorld
     private int aliensSnuckIn = 0;
     private int aliensRemaining = INIT_ALIENS;
     private int totalScore = 0;
-    private ArrayList<GameObject> gameObjectArrayList;
+    private boolean soundOn = false;
+    private GameObjectCollection gameObjectCollection;
     private Spaceship spaceship;
 
     public void
     init()
     {
-	gameObjectArrayList = new ArrayList<GameObject>();
-        gameObjectArrayList.add(new Spaceship());
-        spaceship = getSpaceship();
+        spaceship = Spaceship.getSpaceship();
+	gameObjectCollection = new GameObjectCollection();
+        gameObjectCollection.add(spaceship);
 
         for (int i = 0; i < INIT_ASTRONAUTS; i++)
-        {
-            gameObjectArrayList.add(new Astronaut());
-        }
+            gameObjectCollection.add(new Astronaut());
+
 	for (int i = 0; i < INIT_ALIENS; i++)
-	{
-	    gameObjectArrayList.add(new Alien());
-	}
-    }
-    
-    
-    public Alien
-    getNextAlien(int i)
-    {
-        Alien alien = null;
-        if (aliensRemaining > 0 && (gameObjectArrayList.get(i) instanceof Alien))
-            alien = (Alien) gameObjectArrayList.get(i);
-        return alien;         
-    }
-    public Astronaut
-    getNextAstronaut(int i)
-    {
-        Astronaut astronaut = null;
-        if (astronautsRemaining > 0 && (gameObjectArrayList.get(i) instanceof Astronaut))
-            astronaut = (Astronaut) gameObjectArrayList.get(i);
-        return astronaut;         
-    }
-    public Spaceship
-    getSpaceship()
-    {
-        Spaceship s = null;
-        int i = 0;
-        while (s == null)
-        {
-            if (gameObjectArrayList.get(i) instanceof Spaceship)
-                s = (Spaceship) gameObjectArrayList.get(i);
-            i++;
-        }
-        return s;
+	    gameObjectCollection.add(new Alien());
+
     }
 	
     public boolean
@@ -101,6 +71,7 @@ GameWorld
     {
         spaceship.openDoor();
     }
+
     public void
     closeSpaceshipDoor()
     {
@@ -112,16 +83,19 @@ GameWorld
     {
         spaceship.moveLeft();
     }
+
     public void
     moveSpaceshipRight()
     {
         spaceship.moveRight();
     }
+
     public void
     moveSpaceshipUp()
     {
         spaceship.moveUp();
     }
+
     public void
     moveSpaceshipDown()
     {
@@ -137,22 +111,16 @@ GameWorld
     public void
     rescue()
     {
-        for (int i = 0; i < gameObjectArrayList.size(); i++)
-        {
-            if (getNextAlien(i) != null) {
-                Alien alien = getNextAlien(i);
-                if (opponentAtDoor(alien) != null) {
-                    updateScore((Opponent) alien);
-                    gameObjectArrayList.remove(i--);
-                }
-            }
-            
-            if (getNextAstronaut(i) != null) {
-                Astronaut astronaut = getNextAstronaut(i);
-                if (opponentAtDoor(astronaut) != null) {
-                    updateScore((Opponent) astronaut);
-                    gameObjectArrayList.remove(i--);
-                }
+        IIterator gameObjects = gameObjectCollection.getIterator();
+
+        while (gameObjects.hasNext()) {
+            GameObject gameObject = gameObjects.getNext();
+
+            if (gameObject instanceof Opponent 
+                && opponentAtDoor((Opponent) gameObject) != null)
+            {
+                updateScore((Opponent) gameObject);
+                gameObjects.remove();
             }
         }
     }
@@ -198,21 +166,22 @@ GameWorld
     public void
     map()
     {
-        for (int i = 0; i < gameObjectArrayList.size(); i++)
-        {
-            GameObject go = gameObjectArrayList.get(i);
-            if (go instanceof GameObject)
-                System.out.println(go.toString());
+        IIterator gameObjects = gameObjectCollection.getIterator();
+
+        while (gameObjects.hasNext()) {
+            GameObject gameObject = gameObjects.getNext();
+            System.out.println(gameObject.toString());
         }
     }
     
     public void
     tick()
     {
-        for (int i = 0; i < gameObjectArrayList.size(); i++)
-        {
-            if (gameObjectArrayList.get(i) instanceof IMoving) {
-                IMoving movingGameObject = (IMoving) gameObjectArrayList.get(i);
+        IIterator gameObjects = gameObjectCollection.getIterator();
+
+        while (gameObjects.hasNext()) {
+            if (gameObjects.getNext() instanceof IMoving) {
+                IMoving movingGameObject = (IMoving) gameObjects.getNext();
                 movingGameObject.move();
             }   
         }
@@ -222,9 +191,10 @@ GameWorld
     getAliensRemaining()
     {   
         this.aliensRemaining = 0;
-        for (int i = 0; i < gameObjectArrayList.size(); i++)
-        {
-            if (gameObjectArrayList.get(i) instanceof Alien)
+        IIterator gameObjects = gameObjectCollection.getIterator();
+
+        while (gameObjects.hasNext()) {
+            if (gameObjects.getNext() instanceof Alien)
                 this.aliensRemaining++;
         }
         return this.aliensRemaining;
@@ -234,9 +204,10 @@ GameWorld
     getAstronautsRemaining()
     {   
         this.astronautsRemaining = 0;
-        for (int i = 0; i < gameObjectArrayList.size(); i++)
-        {
-            if (gameObjectArrayList.get(i) instanceof Astronaut)
+        IIterator gameObjects = gameObjectCollection.getIterator();
+
+        while (gameObjects.hasNext()) {
+            if (gameObjects.getNext() instanceof Astronaut)
                 this.astronautsRemaining++;
         }
         return this.astronautsRemaining;
@@ -246,8 +217,9 @@ GameWorld
     aliensCollide()
     {
         boolean collisionOccured = false;
+
         if (getAliensRemaining() >= 2) {
-            gameObjectArrayList.add(nearbyAlien());
+            gameObjectCollection.add(nearbyAlien());
             this.aliensRemaining++;
             collisionOccured = true;
         }
@@ -272,10 +244,12 @@ GameWorld
             nearbyX = randomRemainingAlien.getX() - 2;
         else
             nearbyX = randomRemainingAlien.getX() + 2;
+
         if (randomRemainingAlien.yAtMaxHeight())
             nearbyY = randomRemainingAlien.getY() - 2;
         else
             nearbyY = randomRemainingAlien.getY() + 2;
+
         Alien spawnedAlien = new Alien(nearbyX, nearbyY);
         
         return spawnedAlien;
@@ -284,62 +258,25 @@ GameWorld
     private Alien
     getRandomRemainingAlien()
     {
-        Alien randomAlien;
-        boolean randomAlienChosen = false;
-        int randomAlienIdx = 0;
-        Random random = new Random();
-        
-        while (randomAlienChosen == false)
-        {
-            randomAlienIdx = random.nextInt(gameObjectArrayList.size());
-            if (gameObjectArrayList.get(randomAlienIdx) instanceof Alien)
-                randomAlienChosen = true;
-        }
-        randomAlien = (Alien) gameObjectArrayList.get(randomAlienIdx);
-        
-        return randomAlien;
+        return gameObjectCollection.getRandomRemainingAlien();
     }
     
     private Astronaut
     getRandomRemainingAstronaut()
     {
-        Astronaut randomAstronaut;
-        boolean randomAstronautChosen = false;
-        int randomAstronautIdx = 0;
-        Random random = new Random();
-        
-        while (randomAstronautChosen == false)
-        {
-            randomAstronautIdx = random.nextInt(gameObjectArrayList.size());
-            if (gameObjectArrayList.get(randomAstronautIdx) instanceof Astronaut)
-                randomAstronautChosen = true;
-        }
-        randomAstronaut = (Astronaut) gameObjectArrayList.get(randomAstronautIdx);
-        
-        return randomAstronaut;
+        return gameObjectCollection.getRandomRemainingAstronaut();
     }
     
     public boolean
     fight()
     {
-        boolean randomAstronautChosen = false;
-
-        if (getAliensRemaining() > 0)
-        {
+        if (getAliensRemaining() > 0) {
             Astronaut randomAstronaut;
-            int randomAstronautIdx = 0;
-            Random random = new Random();
-
-            while (randomAstronautChosen == false)
-            {
-                randomAstronautIdx = random.nextInt(gameObjectArrayList.size());
-                if (gameObjectArrayList.get(randomAstronautIdx) instanceof Astronaut)
-                    randomAstronautChosen = true;
-            }
-            randomAstronaut = (Astronaut) gameObjectArrayList.get(randomAstronautIdx);
+            randomAstronaut = getRandomRemainingAstronaut();
             randomAstronaut.collidesWithAlien();
+            return true;
         }
-        return randomAstronautChosen;
+        return false;
     }
     
     public int
@@ -371,7 +308,7 @@ GameWorld
     toString()
     {
         String gameState = "       "
-                         + "Current score: " + totalScore + " |"
+                         + "Current score: "          + totalScore + " |"
                          + "\n  Astronauts rescued: " + astronautsRescued
                          + " | Aliens on spaceship: " + aliensSnuckIn
                          + "\nAstronauts remaining: " + astronautsRemaining

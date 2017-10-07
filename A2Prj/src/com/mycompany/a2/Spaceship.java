@@ -17,14 +17,23 @@ Spaceship extends Rescuer
     private static final int DOOR_MINIMUM_SIZE = 50;
     private static final int DOOR_MAXIMUM_SIZE = 1024;
     private boolean doorState;
+    private static Spaceship spaceship;
     
-    public
+    private
     Spaceship()
     {
         super();
         setSize(100);
         this.doorState = false;
         super.setColor(HINT_OF_RED, DARK_GREEN, HINT_OF_BLUE);
+    }
+    
+    public static Spaceship
+    getSpaceship()
+    {
+        if (spaceship == null)
+            spaceship = new Spaceship();
+        return spaceship;
     }
     
     public void
