@@ -222,6 +222,8 @@ GameWorld extends Observable
             gameObjectCollection.add(nearbyAlien());
             this.aliensRemaining++;
             collisionOccured = true;
+            this.setChanged();
+            this.notifyObservers();
         }
         return collisionOccured;
     }
@@ -302,6 +304,8 @@ GameWorld extends Observable
             this.astronautsRemaining--;
             this.astronautsRescued++;
         }
+        this.setChanged();
+        this.notifyObservers();
     }
     
     public String
