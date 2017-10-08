@@ -17,6 +17,12 @@ ExpandDoorCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.expandSpaceshipDoor();
+        if(target.expandSpaceshipDoor())
+          System.out.println("The spaceship door expands.\n");
+      else
+          System.out.println("Spaceship's door is already expanded to maximum size.\n");
+
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                "''''''''''''''''''''''''''''''''''''''\n");
     }
 }

@@ -17,6 +17,12 @@ ContractDoorCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.contractSpaceshipDoor();
+        if(target.contractSpaceshipDoor())
+            System.out.println("The spaceship door contracts.\n");
+        else
+            System.out.println("Spaceship's door is already contracted to minimum size.\n");
+
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                            "''''''''''''''''''''''''''''''''''''''\n");
     }
 }

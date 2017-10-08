@@ -18,5 +18,9 @@ MoveSpaceshipUpCommand extends Command
     actionPerformed(ActionEvent evt)
     {
         target.moveSpaceshipUp();
+        System.out.println("The spaceship moves up.\n");
+
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                "''''''''''''''''''''''''''''''''''''''\n");
     }
 }

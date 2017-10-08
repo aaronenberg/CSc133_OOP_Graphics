@@ -18,5 +18,9 @@ ToggleSoundCommand extends Command
     actionPerformed(ActionEvent evt)
     {
         target.toggleSound();
+        System.out.println("sound is on: " + target.getSound());
+        
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                "''''''''''''''''''''''''''''''''''''''\n");
     }
 }

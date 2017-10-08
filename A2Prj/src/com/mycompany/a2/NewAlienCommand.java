@@ -18,5 +18,9 @@ NewAlienCommand extends Command
     actionPerformed(ActionEvent evt)
     {
         target.aliensCollide();
+        System.out.println("A new alien spawns.\n");
+
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                "''''''''''''''''''''''''''''''''''''''\n");
     }
 }

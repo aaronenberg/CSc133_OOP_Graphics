@@ -17,6 +17,14 @@ SpaceshipToAlienCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.spaceshipToAlien();
+        if (target.getAliensRemaining() > 0) {
+            target.spaceshipToAlien();
+            System.out.println("The spaceship moves to a randomly selected alien.\n");
+
+            System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                    "''''''''''''''''''''''''''''''''''''''\n");
+        }
+        else
+            System.out.println("There are no aliens remaining to move to.");
     }
 }

@@ -17,6 +17,13 @@ TickCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.tick();
+        if (target.getAstronautsRemaining() + target.getAliensRemaining() > 0) {
+            target.tick();
+            System.out.println("All aliens and healthy astronauts move.\n");
+
+            System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                    "''''''''''''''''''''''''''''''''''''''\n");
+        }
+        
     }
 }

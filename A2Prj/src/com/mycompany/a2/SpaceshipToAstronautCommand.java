@@ -17,6 +17,12 @@ SpaceshipToAstronautCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.spaceshipToAstronaut();
+        if (target.getAstronautsRemaining() > 0) {
+            target.spaceshipToAstronaut();
+            System.out.println("The spaceship moves to a randomly selected astronaut.\n");
+
+            System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                    "''''''''''''''''''''''''''''''''''''''\n");
+        }
     }
 }

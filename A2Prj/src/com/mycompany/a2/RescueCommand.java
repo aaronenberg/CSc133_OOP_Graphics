@@ -17,6 +17,15 @@ RescueCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.rescue();
+        target.openSpaceshipDoor();
+        System.out.println("The spaceship door opens...");
+        if (!target.rescue())
+            System.out.println("but there is no one at the door.\n" +
+                                "The door automatically shuts.\n");
+        target.closeSpaceshipDoor();
+        
+
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                "''''''''''''''''''''''''''''''''''''''\n");
     }
 }
