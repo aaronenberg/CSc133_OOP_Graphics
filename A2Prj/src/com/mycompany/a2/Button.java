@@ -9,9 +9,9 @@ Button extends com.codename1.ui.Button
 {
     private Style style = new Style();
     public
-    Button(String text)
+    Button()
     {
-        super(text);
+        super();
         style.setBgTransparency(200);
         style.setBgColor(ColorUtil.BLUE);
         style.setFgColor(ColorUtil.WHITE);
