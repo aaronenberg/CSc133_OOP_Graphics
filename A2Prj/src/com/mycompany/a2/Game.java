@@ -26,22 +26,35 @@ public class
 Game extends Form
 {
 
-    private GameWorld gameWorld;
+    private GameWorld gameWorld = new GameWorld();
     private ScoreView scoreView;
+    private MapView mapView;
 
-    private Button expandDoorButton;
-    private ExpandDoorCommand expandDoorCommand;
-    private Button upButton;
-    private Button leftButton;
-    private Button moveToAstronautButton;
-    private Button contractButton;
-    private Button downButton;
-    private Button rightButton;
-    private Button moveToAlienButton;
-    private Button scoreButton;
-    private Button newAlienButton;
-    private Button fightButton;
-    private Button tickButton;
+    private Button expandDoorButton = new Button();
+    private Button upButton = new Button();
+    private Button leftButton = new Button();
+    private Button spaceshipToAstronautButton = new Button();
+    private Button contractDoorButton = new Button();
+    private Button downButton = new Button();
+    private Button rightButton = new Button();
+    private Button spaceshipToAlienButton = new Button();
+    private Button rescueButton = new Button();
+    private Button newAlienButton = new Button();
+    private Button fightButton = new Button();
+    private Button tickButton = new Button();
+    
+    private ExpandDoorCommand expandDoorCommand = new ExpandDoorCommand(gameWorld);
+    private MoveSpaceshipUpCommand moveSpaceshipUpCommand = new MoveSpaceshipUpCommand(gameWorld);
+    private MoveSpaceshipLeftCommand moveSpaceshipLeftCommand = new MoveSpaceshipLeftCommand(gameWorld);
+    private SpaceshipToAstronautCommand spaceshipToAstronautCommand = new SpaceshipToAstronautCommand(gameWorld);
+    private ContractDoorCommand contractDoorCommand = new ContractDoorCommand(gameWorld);
+    private MoveSpaceshipDownCommand moveSpaceshipDownCommand = new MoveSpaceshipDownCommand(gameWorld);
+    private MoveSpaceshipRightCommand moveSpaceshipRightCommand = new MoveSpaceshipRightCommand(gameWorld);
+    private SpaceshipToAlienCommand spaceshipToAlienCommand = new SpaceshipToAlienCommand(gameWorld);
+    private RescueCommand rescueCommand = new RescueCommand(gameWorld);
+    private NewAlienCommand newAlienCommand = new NewAlienCommand(gameWorld);
+    private FightCommand fightCommand = new FightCommand(gameWorld);
+    private TickCommand tickCommand = new TickCommand(gameWorld);
 
     private Container controlWest;
     private Container controlEast;
@@ -54,17 +67,23 @@ Game extends Form
     public
     Game()
     {
-        gameWorld = new GameWorld();
         gameWorld.init();
-        //play();
+
         scoreView = new ScoreView();
+        mapView = new MapView();
+
+        gameWorld.addObserver(scoreView);
+        gameWorld.addObserver(mapView);
+        gameWorld.notifyObservers();
+        
         scoreView.setLayout(new FlowLayout(Component.CENTER));
+        scoreView.getAllStyles().setPaddingTop(10);
         scoreView.getAllStyles().setBorder(Border.createCompoundBorder(
                                            Border.createLineBorder(1),
                                            Border.createLineBorder(1),
                                            Border.createLineBorder(0),
                                            Border.createLineBorder(0)));
-        scoreView.getAllStyles().setPaddingTop(10);
+        
 
         controlWest = new Container(new BoxLayout(BoxLayout.Y_AXIS));
         controlWest.getAllStyles().setBorder(Border.createCompoundBorder(
@@ -72,12 +91,20 @@ Game extends Form
                                              Border.createLineBorder(0),
                                              Border.createLineBorder(0),
                                              Border.createLineBorder(1)));
-        expandDoorCommand = new ExpandDoorCommand(gameWorld);
-        expandDoorButton = new Button("Expand");
+
         expandDoorButton.setCommand(expandDoorCommand);
-        upButton = new Button("Up");
-        leftButton = new Button("Left");
-        moveToAstronautButton = new Button("MoveToAstronaut");
+        upButton.setCommand(moveSpaceshipUpCommand);
+        leftButton.setCommand(moveSpaceshipLeftCommand);
+        spaceshipToAstronautButton.setCommand(spaceshipToAstronautCommand);
+        contractDoorButton.setCommand(contractDoorCommand);
+        downButton.setCommand(moveSpaceshipDownCommand);
+        rightButton.setCommand(moveSpaceshipRightCommand);
+        spaceshipToAlienButton.setCommand(spaceshipToAlienCommand);
+        rescueButton.setCommand(rescueCommand);
+        newAlienButton.setCommand(newAlienCommand);
+        fightButton.setCommand(fightCommand);
+        tickButton.setCommand(tickCommand);
+        
         
         controlEast = new Container(new BoxLayout(BoxLayout.Y_AXIS));
         controlEast.getAllStyles().setBorder(Border.createCompoundBorder(
@@ -85,11 +112,11 @@ Game extends Form
                                              Border.createLineBorder(0),
                                              Border.createLineBorder(1),
                                              Border.createLineBorder(0)));
-        contractButton = new Button("Contract");
-        downButton = new Button("Down");
-        rightButton = new Button("Right");
-        moveToAlienButton = new Button("MoveToAlien");
-        scoreButton = new Button("Score");
+        
+        
+        
+        
+        
         
         controlSouth = new Container(new FlowLayout(Component.CENTER));
         controlSouth.getAllStyles().setBorder(Border.createCompoundBorder(
@@ -97,13 +124,6 @@ Game extends Form
                                               Border.createLineBorder(0),
                                               Border.createLineBorder(0),
                                               Border.createLineBorder(0)));
-        newAlienButton = new Button ("NewAlien");
-        fightButton = new Button ("Fight");
-        tickButton = new Button ("Tick");
-        
-
-        gameWorld.addObserver(scoreView);
-        gameWorld.notifyObservers();
         
         this.setLayout(new BorderLayout());
         this.setTitle("Space Fights Game");
@@ -112,14 +132,14 @@ Game extends Form
         controlWest.add(expandDoorButton);
         controlWest.add(upButton);
         controlWest.add(leftButton);
-        controlWest.add(moveToAstronautButton);
+        controlWest.add(spaceshipToAstronautButton);
         
         controlEast.getAllStyles().setPaddingTop(100);
-        controlEast.add(contractButton);
+        controlEast.add(contractDoorButton);
         controlEast.add(downButton);
         controlEast.add(rightButton);
-        controlEast.add(moveToAlienButton);
-        controlEast.add(scoreButton);
+        controlEast.add(spaceshipToAlienButton);
+        controlEast.add(rescueButton);
         
         controlSouth.add(newAlienButton);
         controlSouth.add(fightButton);
@@ -139,8 +159,6 @@ Game extends Form
         this.addComponent(BorderLayout.WEST, controlWest);
         this.addComponent(BorderLayout.EAST, controlEast);
         this.addComponent(BorderLayout.SOUTH, controlSouth);
-        
-        
         
         this.show();
     }
