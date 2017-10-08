@@ -48,6 +48,8 @@ GameWorld extends Observable
 	for (int i = 0; i < INIT_ALIENS; i++)
 	    gameObjectCollection.add(new Alien());
 	
+	System.out.println("Space fights game world initialized.\n");
+	
 	setChanged();
     }
 	
@@ -55,9 +57,11 @@ GameWorld extends Observable
     expandSpaceshipDoor()
     {
         boolean doorCanExpand = spaceship.doorCanExpand();
-        spaceship.expandDoor();
-        setChanged();
-        notifyObservers();
+        if (doorCanExpand) {
+            spaceship.expandDoor();
+            setChanged();
+            notifyObservers();
+        }
         return doorCanExpand;
     }
     
@@ -65,9 +69,11 @@ GameWorld extends Observable
     contractSpaceshipDoor()
     {
         boolean doorCanContract = spaceship.doorCanContract();
-        spaceship.contractDoor();
-        setChanged();
-        notifyObservers();
+        if (doorCanContract) {
+            spaceship.contractDoor();
+            setChanged();
+            notifyObservers();
+        }
         return doorCanContract;
     }
     
@@ -121,10 +127,11 @@ GameWorld extends Observable
      * so we must decrement the counter or else the very next
      * element would be skipped.
      */
-    public void
+    public boolean
     rescue()
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
+        boolean aboardShip = false;
 
         while (gameObjects.hasNext()) {
             GameObject gameObject = gameObjects.getNext();
@@ -132,12 +139,17 @@ GameWorld extends Observable
             if (gameObject instanceof Opponent 
                 && opponentAtDoor((Opponent) gameObject) != null)
             {
+                aboardShip = true;
                 updateScore((Opponent) gameObject);
-                gameObjects.remove();
-                this.setChanged();
-                this.notifyObservers();
+                gameObjects.remove();  
             }
         }
+        if (aboardShip) {
+            System.out.println("The door automatically shuts.\n");
+            this.setChanged();
+            this.notifyObservers();
+        }
+        return aboardShip;
     }
     
     public void
@@ -191,23 +203,27 @@ GameWorld extends Observable
             GameObject gameObject = gameObjects.getNext();
             System.out.println(gameObject.toString());
         }
-        System.out.println("\n");
     }
     
     public void
     tick()
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
-
-        while (gameObjects.hasNext()) {
+        boolean opponentsMoved = false;
+        
+        // check there is at least one opponent to move
+        while (gameObjects.hasNext() && (this.astronautsRemaining + this.aliensRemaining) > 0) {
             GameObject gameObject = gameObjects.getNext();
 
             if (gameObject instanceof IMoving) {
                 IMoving movingGameObject = (IMoving) gameObject;
                 movingGameObject.move();
-                setChanged();
-                notifyObservers();
+                opponentsMoved = true;
             }   
+        }
+        if (opponentsMoved) {
+            this.setChanged();
+            this.notifyObservers();
         }
     }
     
@@ -282,7 +298,7 @@ GameWorld extends Observable
     public boolean
     fight()
     {
-        if (getAliensRemaining() > 0) {
+        if (this.aliensRemaining > 0 && this.astronautsRemaining > 0) {
             Astronaut randomAstronaut;
             randomAstronaut = getRandomRemainingAstronaut();
             randomAstronaut.collidesWithAlien();
@@ -319,7 +335,9 @@ GameWorld extends Observable
     public void
     toggleSound()
     {
-        this.soundOn = !this.soundOn;
+        this.soundOn = !(this.soundOn);
+        setChanged();
+        notifyObservers();
     }
     
     public void
@@ -329,6 +347,7 @@ GameWorld extends Observable
             this.totalScore -= ALIEN_BREACH_PENALTY;
             this.aliensRemaining--;
             this.aliensSnuckIn++;
+            System.out.println("An alien sneaks in!");
         }
         else if (opponent instanceof Astronaut)
         {
@@ -338,6 +357,7 @@ GameWorld extends Observable
             this.totalScore += reward;
             this.astronautsRemaining--;
             this.astronautsRescued++;
+            System.out.println("You rescue an astronaut.");
         }
     }
 }
