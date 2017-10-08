@@ -56,6 +56,8 @@ GameWorld extends Observable
     {
         boolean doorCanExpand = spaceship.doorCanExpand();
         spaceship.expandDoor();
+        setChanged();
+        notifyObservers();
         return doorCanExpand;
     }
     
@@ -64,6 +66,8 @@ GameWorld extends Observable
     {
         boolean doorCanContract = spaceship.doorCanContract();
         spaceship.contractDoor();
+        setChanged();
+        notifyObservers();
         return doorCanContract;
     }
     
@@ -83,24 +87,32 @@ GameWorld extends Observable
     moveSpaceshipLeft()
     {
         spaceship.moveLeft();
+        setChanged();
+        notifyObservers();
     }
 
     public void
     moveSpaceshipRight()
     {
         spaceship.moveRight();
+        setChanged();
+        notifyObservers();
     }
 
     public void
     moveSpaceshipUp()
     {
         spaceship.moveUp();
+        setChanged();
+        notifyObservers();
     }
 
     public void
     moveSpaceshipDown()
     {
         spaceship.moveDown();
+        setChanged();
+        notifyObservers();
     }
 
     /*
@@ -122,22 +134,28 @@ GameWorld extends Observable
             {
                 updateScore((Opponent) gameObject);
                 gameObjects.remove();
+                this.setChanged();
+                this.notifyObservers();
             }
         }
     }
     
     public void
-    transferSpaceshipToAlien()
+    spaceshipToAlien()
     {
         Alien alien = getRandomRemainingAlien();
         spaceship.jumpToLocation(alien.getX(), alien.getY());
+        setChanged();
+        notifyObservers();
     }
 
     public void
-    transferSpaceshipToAstronaut()
+    spaceshipToAstronaut()
     {
         Astronaut astronaut = getRandomRemainingAstronaut();
         spaceship.jumpToLocation(astronaut.getX(), astronaut.getY());
+        setChanged();
+        notifyObservers();
     }
     
     /*
@@ -173,6 +191,7 @@ GameWorld extends Observable
             GameObject gameObject = gameObjects.getNext();
             System.out.println(gameObject.toString());
         }
+        System.out.println("\n");
     }
     
     public void
@@ -181,44 +200,22 @@ GameWorld extends Observable
         IIterator gameObjects = gameObjectCollection.getIterator();
 
         while (gameObjects.hasNext()) {
-            if (gameObjects.getNext() instanceof IMoving) {
-                IMoving movingGameObject = (IMoving) gameObjects.getNext();
+            GameObject gameObject = gameObjects.getNext();
+
+            if (gameObject instanceof IMoving) {
+                IMoving movingGameObject = (IMoving) gameObject;
                 movingGameObject.move();
+                setChanged();
+                notifyObservers();
             }   
         }
     }
-
-//    public int
-//    getAliensRemaining()
-//    {   
-//        this.aliensRemaining = 0;
-//        IIterator gameObjects = gameObjectCollection.getIterator();
-//
-//        while (gameObjects.hasNext()) {
-//            if (gameObjects.getNext() instanceof Alien)
-//                this.aliensRemaining++;
-//        }
-//        return this.aliensRemaining;
-//    }
     
     public int
     getAliensRemaining()
     {
         return this.aliensRemaining;
     }
-    
-//    public int
-//    getAstronautsRemaining()
-//    {   
-//        this.astronautsRemaining = 0;
-//        IIterator gameObjects = gameObjectCollection.getIterator();
-//
-//        while (gameObjects.hasNext()) {
-//            if (gameObjects.getNext() instanceof Astronaut)
-//                this.astronautsRemaining++;
-//        }
-//        return this.astronautsRemaining;
-//    }
     
     public int
     getAstronautsRemaining()
@@ -289,6 +286,8 @@ GameWorld extends Observable
             Astronaut randomAstronaut;
             randomAstronaut = getRandomRemainingAstronaut();
             randomAstronaut.collidesWithAlien();
+            setChanged();
+            notifyObservers();
             return true;
         }
         return false;
@@ -316,6 +315,12 @@ GameWorld extends Observable
     {
         return this.soundOn;
     }
+
+    public void
+    toggleSound()
+    {
+        this.soundOn = !this.soundOn;
+    }
     
     public void
     updateScore(Opponent opponent)
@@ -334,19 +339,5 @@ GameWorld extends Observable
             this.astronautsRemaining--;
             this.astronautsRescued++;
         }
-        this.setChanged();
-        this.notifyObservers();
-    }
-    
-    public String
-    toString()
-    {
-        String gameState = "       "
-                         + "Current score: "          + totalScore + " |"
-                         + "\n  Astronauts rescued: " + astronautsRescued
-                         + " | Aliens on spaceship: " + aliensSnuckIn
-                         + "\nAstronauts remaining: " + astronautsRemaining
-                         + " |    Aliens remaining: " + aliensRemaining;
-        return gameState;
     }
 }
