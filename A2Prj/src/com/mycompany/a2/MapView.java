@@ -13,5 +13,6 @@ MapView extends Container implements Observer
     {
         GameWorld gw = (GameWorld) observable;
         gw.map();
+        System.out.println();
     }
 }
