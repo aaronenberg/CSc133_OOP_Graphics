@@ -1,21 +1,22 @@
 package com.mycompany.a2;
 
-
-import com.codename1.ui.layouts.BorderLayout;
-import com.codename1.ui.layouts.FlowLayout;
+import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Command;
+import com.codename1.ui.Component;
+import com.codename1.ui.Container;
 import com.codename1.ui.Form;
-import com.codename1.ui.Label;
-import com.codename1.ui.events.ActionEvent;
-import com.codename1.ui.events.ActionListener;
-import com.codename1.ui.TextField;
-import java.lang.String;
+import com.codename1.ui.layouts.BorderLayout;
+import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.layouts.FlowLayout;
+import com.codename1.ui.plaf.Border;
+import com.codename1.ui.Toolbar;
 
 
 /*
  * Game is the controller which enforces rules as to what
  * commands a user can issue while playing the game.
  * It instantiates a GameWorld and calls its init() to 
- * populate the game with GameObjects. play() is responsible
+ * populate the game with GameObjects. Also responsible
  * for prompting the user for input and taking certain actions
  * based on that input. Most of these actions are calls to 
  * GameWorld methods. When there are no more astronauts remaining,
@@ -27,6 +28,28 @@ Game extends Form
 
     private GameWorld gameWorld;
     private ScoreView scoreView;
+
+    private Button expandDoorButton;
+    private ExpandDoorCommand expandDoorCommand;
+    private Button upButton;
+    private Button leftButton;
+    private Button moveToAstronautButton;
+    private Button contractButton;
+    private Button downButton;
+    private Button rightButton;
+    private Button moveToAlienButton;
+    private Button scoreButton;
+    private Button newAlienButton;
+    private Button fightButton;
+    private Button tickButton;
+
+    private Container controlWest;
+    private Container controlEast;
+    private Container controlSouth;
+    
+    private Toolbar toolbar;
+    private Command sideMenuItem1;
+    private Command helpClickable;
 	
     public
     Game()
@@ -35,11 +58,89 @@ Game extends Form
         gameWorld.init();
         //play();
         scoreView = new ScoreView();
+        scoreView.setLayout(new FlowLayout(Component.CENTER));
+        scoreView.getAllStyles().setBorder(Border.createCompoundBorder(
+                                           Border.createLineBorder(1),
+                                           Border.createLineBorder(1),
+                                           Border.createLineBorder(0),
+                                           Border.createLineBorder(0)));
+        scoreView.getAllStyles().setPaddingTop(10);
+
+        controlWest = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+        controlWest.getAllStyles().setBorder(Border.createCompoundBorder(
+                                             Border.createLineBorder(0),
+                                             Border.createLineBorder(0),
+                                             Border.createLineBorder(0),
+                                             Border.createLineBorder(1)));
+        expandDoorCommand = new ExpandDoorCommand(gameWorld);
+        expandDoorButton = new Button("Expand");
+        expandDoorButton.setCommand(expandDoorCommand);
+        upButton = new Button("Up");
+        leftButton = new Button("Left");
+        moveToAstronautButton = new Button("MoveToAstronaut");
+        
+        controlEast = new Container(new BoxLayout(BoxLayout.Y_AXIS));
+        controlEast.getAllStyles().setBorder(Border.createCompoundBorder(
+                                             Border.createLineBorder(0),
+                                             Border.createLineBorder(0),
+                                             Border.createLineBorder(1),
+                                             Border.createLineBorder(0)));
+        contractButton = new Button("Contract");
+        downButton = new Button("Down");
+        rightButton = new Button("Right");
+        moveToAlienButton = new Button("MoveToAlien");
+        scoreButton = new Button("Score");
+        
+        controlSouth = new Container(new FlowLayout(Component.CENTER));
+        controlSouth.getAllStyles().setBorder(Border.createCompoundBorder(
+                                              Border.createLineBorder(1),
+                                              Border.createLineBorder(0),
+                                              Border.createLineBorder(0),
+                                              Border.createLineBorder(0)));
+        newAlienButton = new Button ("NewAlien");
+        fightButton = new Button ("Fight");
+        tickButton = new Button ("Tick");
+        
+
         gameWorld.addObserver(scoreView);
         
         this.setLayout(new BorderLayout());
-        scoreView.setLayout(new FlowLayout());
-        this.addComponent(BorderLayout.CENTER, scoreView);
+        this.setTitle("Space Fights Game");
+
+        controlWest.getAllStyles().setPaddingTop(100);
+        controlWest.add(expandDoorButton);
+        controlWest.add(upButton);
+        controlWest.add(leftButton);
+        controlWest.add(moveToAstronautButton);
+        
+        controlEast.getAllStyles().setPaddingTop(100);
+        controlEast.add(contractButton);
+        controlEast.add(downButton);
+        controlEast.add(rightButton);
+        controlEast.add(moveToAlienButton);
+        controlEast.add(scoreButton);
+        
+        controlSouth.add(newAlienButton);
+        controlSouth.add(fightButton);
+        controlSouth.add(tickButton);
+        
+        toolbar = new Toolbar();
+        this.setToolbar(toolbar);
+        toolbar.getAllStyles().setPaddingTop(40);
+        toolbar.setTitle("Space Fights Game");
+        toolbar.setTitleCentered(true);
+        sideMenuItem1 = new Command("test");
+        helpClickable = new Command("Help");
+        toolbar.addCommandToSideMenu(sideMenuItem1);
+        toolbar.addCommandToRightBar(helpClickable);
+
+        this.addComponent(BorderLayout.NORTH, scoreView);
+        this.addComponent(BorderLayout.WEST, controlWest);
+        this.addComponent(BorderLayout.EAST, controlEast);
+        this.addComponent(BorderLayout.SOUTH, controlSouth);
+        
+        
+        
         this.show();
     }
 	
