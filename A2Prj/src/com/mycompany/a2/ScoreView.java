@@ -34,9 +34,9 @@ ScoreView extends Container implements Observer
     }
 
     public void
-    update(Observable o, Object arg)
+    update(Observable observable, Object arg)
     {
-        GameWorld gw = (GameWorld) o;
+        GameWorld gw = (GameWorld) observable;
         totalScoreLabel.setText(" Total Score: " + gw.getScore());
         astronautsRescuedLabel.setText(" Astronauts Rescued: " + gw.getAstronautsRescued());
         aliensSnuckInLabel.setText(" Aliens Snuck In: " + gw.getAliensSnuckIn());
