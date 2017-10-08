@@ -103,6 +103,7 @@ Game extends Form
         
 
         gameWorld.addObserver(scoreView);
+        gameWorld.notifyObservers();
         
         this.setLayout(new BorderLayout());
         this.setTitle("Space Fights Game");

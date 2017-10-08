@@ -20,11 +20,11 @@ ScoreView extends Container implements Observer
     ScoreView()
     {
         totalScoreLabel = new Label("Total Score: ");
-        astronautsRescuedLabel = new Label("Astronauts Rescued: ");
-        aliensSnuckInLabel = new Label("Aliens Snuck In: ");
-        astronautsRemainingLabel = new Label("Astronauts Remaining: ");
-        aliensRemainingLabel = new Label("Aliens Remaining: ");
-        soundLabel = new Label("Sound: ");
+        astronautsRescuedLabel = new Label(" Astronauts Rescued: ");
+        aliensSnuckInLabel = new Label(" Aliens Snuck In: ");
+        astronautsRemainingLabel = new Label(" Astronauts Remaining: ");
+        aliensRemainingLabel = new Label(" Aliens Remaining: ");
+        soundLabel = new Label(" Sound: ");
         this.add(totalScoreLabel);
         this.add(astronautsRescuedLabel);
         this.add(astronautsRemainingLabel);
@@ -37,8 +37,23 @@ ScoreView extends Container implements Observer
     update(Observable o, Object arg)
     {
         GameWorld gw = (GameWorld) o;
-        astronautsRemainingLabel.setText("Astronauts Remaining: " + gw.getAstronautsRemaining());
+        totalScoreLabel.setText(" Total Score: " + gw.getScore());
+        astronautsRescuedLabel.setText(" Astronauts Rescued: " + gw.getAstronautsRescued());
+        aliensSnuckInLabel.setText(" Aliens Snuck In: " + gw.getAliensSnuckIn());
+        astronautsRemainingLabel.setText(" Astronauts Remaining: " + gw.getAstronautsRemaining());
+        aliensRemainingLabel.setText(" Aliens Remaining: " + gw.getAliensRemaining());
+        soundLabel.setText(" Sound: " + checkSoundStatus(gw.getSound()));
 
+
+    }
+    
+    public String
+    checkSoundStatus(Boolean soundOn)
+    {
+        if (soundOn)
+            return "ON";
+        else
+            return "OFF";
     }
 
 }

@@ -47,7 +47,8 @@ GameWorld extends Observable
 
 	for (int i = 0; i < INIT_ALIENS; i++)
 	    gameObjectCollection.add(new Alien());
-
+	
+	setChanged();
     }
 	
     public boolean
@@ -186,30 +187,42 @@ GameWorld extends Observable
             }   
         }
     }
+
+//    public int
+//    getAliensRemaining()
+//    {   
+//        this.aliensRemaining = 0;
+//        IIterator gameObjects = gameObjectCollection.getIterator();
+//
+//        while (gameObjects.hasNext()) {
+//            if (gameObjects.getNext() instanceof Alien)
+//                this.aliensRemaining++;
+//        }
+//        return this.aliensRemaining;
+//    }
     
     public int
     getAliensRemaining()
-    {   
-        this.aliensRemaining = 0;
-        IIterator gameObjects = gameObjectCollection.getIterator();
-
-        while (gameObjects.hasNext()) {
-            if (gameObjects.getNext() instanceof Alien)
-                this.aliensRemaining++;
-        }
+    {
         return this.aliensRemaining;
     }
     
+//    public int
+//    getAstronautsRemaining()
+//    {   
+//        this.astronautsRemaining = 0;
+//        IIterator gameObjects = gameObjectCollection.getIterator();
+//
+//        while (gameObjects.hasNext()) {
+//            if (gameObjects.getNext() instanceof Astronaut)
+//                this.astronautsRemaining++;
+//        }
+//        return this.astronautsRemaining;
+//    }
+    
     public int
     getAstronautsRemaining()
-    {   
-        this.astronautsRemaining = 0;
-        IIterator gameObjects = gameObjectCollection.getIterator();
-
-        while (gameObjects.hasNext()) {
-            if (gameObjects.getNext() instanceof Astronaut)
-                this.astronautsRemaining++;
-        }
+    {
         return this.astronautsRemaining;
     }
 
@@ -282,9 +295,26 @@ GameWorld extends Observable
     }
     
     public int
+    getAstronautsRescued()
+    {
+        return this.astronautsRescued;
+    }
+    public int
+    getAliensSnuckIn()
+    {
+        return this.aliensSnuckIn;
+    }
+    
+    public int
     getScore()
     {
         return this.totalScore;
+    }
+    
+    public boolean
+    getSound()
+    {
+        return this.soundOn;
     }
     
     public void
