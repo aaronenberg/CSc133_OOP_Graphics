@@ -16,10 +16,11 @@ import java.util.Random;
 public abstract class
 GameObject
 {
-
+    
     private static final float WORLD_MAX_WIDTH = (float) 1024.0;
     private static final float WORLD_MAX_HEIGHT = (float) 768.0;
     private static final float WORLD_ORIGIN = (float) 0.0;
+    private int mapHeight;
     private int size;
     private int color;
     private Point location;
@@ -171,6 +172,12 @@ GameObject
     setSize(int newSize)
     {
         this.size = newSize;
+    }
+    
+    private static float
+    getMapHeight(MapView map)
+    {
+        return (float) map.getHeight();
     }
     
     public String
