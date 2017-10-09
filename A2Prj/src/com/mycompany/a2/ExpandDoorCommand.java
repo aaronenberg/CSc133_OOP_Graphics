@@ -10,7 +10,7 @@ ExpandDoorCommand extends Command
     public
     ExpandDoorCommand(GameWorld gw)
     {
-        super("expand");
+        super("Expand");
         this.target = gw;
     }
     
