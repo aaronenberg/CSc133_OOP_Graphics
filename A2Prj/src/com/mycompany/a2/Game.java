@@ -1,15 +1,15 @@
 package com.mycompany.a2;
 
-import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.CheckBox;
 import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Form;
+import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Border;
-import com.codename1.ui.Toolbar;
 
 
 /*
@@ -68,15 +68,17 @@ Game extends Form
     private NewAlienCommand             newAlienCommand             = new NewAlienCommand(gameWorld);
     private FightCommand                fightCommand                = new FightCommand(gameWorld);
     private TickCommand                 tickCommand                 = new TickCommand(gameWorld);
-//    private exitCommand                 exitCommand                 = new ExitCommand(gameWorld);
-
+    private ToggleSoundCommand          toggleSound                 = new ToggleSoundCommand(gameWorld);
+    private ExitCommand                 exitCommand                 = new ExitCommand();
+    
+    private CheckBox sideMenuCheckBox = new CheckBox("Sound");
+    
     private Container controlWest;
     private Container controlEast;
     private Container controlSouth;
 
     private Toolbar toolbar;
-    private ToggleSoundCommand toggleSound = new ToggleSoundCommand(gameWorld);
-    private Command sideMenuItem1;
+    
     private Command helpClickable;
 
     public
@@ -117,7 +119,7 @@ Game extends Form
         this.addKeyListener(wKeyCode, newAlienCommand);
         this.addKeyListener(fKeyCode, fightCommand);
         this.addKeyListener(tKeyCode, tickCommand);
-//        this.addKeyListener(xKeyCode, exitCommand);
+        this.addKeyListener(xKeyCode, exitCommand);
         
         expandDoorButton.setCommand(expandDoorCommand);
         upButton.setCommand(moveSpaceshipUpCommand);
@@ -131,6 +133,7 @@ Game extends Form
         newAlienButton.setCommand(newAlienCommand);
         fightButton.setCommand(fightCommand);
         tickButton.setCommand(tickCommand);
+        sideMenuCheckBox.setCommand(toggleSound);
 
         controlWest = new Container(new BoxLayout(BoxLayout.Y_AXIS));
         controlWest.getAllStyles().setPaddingTop(100);
@@ -174,9 +177,11 @@ Game extends Form
         toolbar.getAllStyles().setPaddingTop(40);
         toolbar.setTitle("Space Fights Game");
         toolbar.setTitleCentered(true);
-        sideMenuItem1 = new Command("test");
         helpClickable = new Command("Help");
+        toggleSound.putClientProperty("SideComponent", sideMenuCheckBox);
         toolbar.addCommandToSideMenu(toggleSound);
+        toolbar.addCommandToSideMenu(exitCommand);
+        toolbar.addCommandToSideMenu(rescueCommand);
         toolbar.addCommandToRightBar(helpClickable);
 
         this.addComponent(BorderLayout.NORTH, scoreView);
@@ -186,6 +191,19 @@ Game extends Form
 
         this.show();
     }
+    
+    public ScoreView
+    getScoreView()
+    {
+        return this.scoreView;
+    }
+
+    public MapView
+    getMapView()
+    {
+        return this.mapView;
+    }
+
 //    private void
 //    play()
 //    {
