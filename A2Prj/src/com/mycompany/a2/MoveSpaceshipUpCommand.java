@@ -11,7 +11,7 @@ MoveSpaceshipUpCommand extends Command
     MoveSpaceshipUpCommand(GameWorld gw)
     {
         super("Up");
-        this.target = gw;
+        target = gw;
     }
     
     public void

@@ -11,7 +11,7 @@ SpaceshipToAstronautCommand extends Command
     SpaceshipToAstronautCommand(GameWorld gw)
     {
         super("MoveToAstronaut");
-        this.target = gw;
+        target = gw;
     }
     
     public void

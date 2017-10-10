@@ -11,7 +11,7 @@ RescueCommand extends Command
     RescueCommand(GameWorld gw)
     {
         super("Score");
-        this.target = gw;
+        target = gw;
     }
     
     public void
@@ -23,7 +23,6 @@ RescueCommand extends Command
             System.out.println("but there is no one at the door.\n" +
                                 "The door automatically shuts.\n");
         target.closeSpaceshipDoor();
-        
 
         System.out.println("''''''''''''''''''''''''''''''''''''''" +
                 "''''''''''''''''''''''''''''''''''''''\n");

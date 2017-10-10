@@ -11,7 +11,7 @@ TickCommand extends Command
     TickCommand(GameWorld gw)
     {
         super("Tick");
-        this.target = gw;
+        target = gw;
     }
     
     public void

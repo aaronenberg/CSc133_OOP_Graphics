@@ -13,13 +13,16 @@ ToggleSoundCommand extends Command
     ToggleSoundCommand(GameWorld gw)
     {
         super("Sound");
-        this.target = gw;
+        target = gw;
     }
     
     public void
     actionPerformed(ActionEvent evt)
     {   
         target.toggleSound();
+        System.out.println(ScoreView.getSoundText() + "\n");
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                "''''''''''''''''''''''''''''''''''''''\n");
         SideMenuBar.closeCurrentMenu();
     }
 }

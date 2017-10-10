@@ -11,7 +11,7 @@ ContractDoorCommand extends Command
     ContractDoorCommand(GameWorld gw)
     {
         super("Contract");
-        this.target = gw;
+        target = gw;
     }
     
     public void

@@ -11,7 +11,7 @@ ExpandDoorCommand extends Command
     ExpandDoorCommand(GameWorld gw)
     {
         super("Expand");
-        this.target = gw;
+        target = gw;
     }
     
     public void

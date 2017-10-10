@@ -11,7 +11,7 @@ FightCommand extends Command
     FightCommand(GameWorld gw)
     {
         super("Fight");
-        this.target = gw;
+        target = gw;
     }
     
     public void

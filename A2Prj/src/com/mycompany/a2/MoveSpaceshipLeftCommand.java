@@ -11,7 +11,7 @@ MoveSpaceshipLeftCommand extends Command
     MoveSpaceshipLeftCommand(GameWorld gw)
     {
         super("Left");
-        this.target = gw;
+        target = gw;
     }
     
     @Override
