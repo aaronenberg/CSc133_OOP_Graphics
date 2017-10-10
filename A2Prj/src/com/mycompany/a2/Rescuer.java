@@ -1,6 +1,5 @@
 package com.mycompany.a2;
 
-
 /*
  * Rescuer is an abstract class which defines the behaviors and
  * characteristics common between its concrete subclasses.
