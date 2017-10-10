@@ -1,9 +1,9 @@
 package com.mycompany.a2;
 
 import com.codename1.ui.CheckBox;
-import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
@@ -25,9 +25,11 @@ import com.codename1.ui.plaf.Border;
 public class
 Game extends Form
 {
-    private GameWorld gameWorld = new GameWorld();
-    private ScoreView scoreView;
-    private MapView mapView;
+    private GameWorld      gameWorld = new GameWorld();
+    private ScoreView      scoreView;
+    private static MapView mapView;
+    private int            mapHeight;
+    private int            mapWidth;
     
     private static int eKeyCode = 101;
     private static int cKeyCode =  99;
@@ -70,6 +72,8 @@ Game extends Form
     private TickCommand                 tickCommand                 = new TickCommand(gameWorld);
     private ToggleSoundCommand          toggleSound                 = new ToggleSoundCommand(gameWorld);
     private ExitCommand                 exitCommand                 = new ExitCommand();
+    private HelpCommand                 helpCommand                 = new HelpCommand();
+    private AboutCommand                aboutCommand                = new AboutCommand();
     
     private CheckBox sideMenuCheckBox = new CheckBox("Sound");
     
@@ -78,34 +82,22 @@ Game extends Form
     private Container controlSouth;
 
     private Toolbar toolbar;
-    
-    private Command helpClickable;
 
     public
     Game()
     {
         gameWorld.init();
-
         scoreView = new ScoreView();
         mapView = new MapView();
-
         gameWorld.addObserver(scoreView);
         gameWorld.addObserver(mapView);
-        gameWorld.notifyObservers();
-        System.out.println("''''''''''''''''''''''''''''''''''''''" +
-                           "''''''''''''''''''''''''''''''''''''''\n");
 
         toolbar = new Toolbar();
         this.setToolbar(toolbar);
         this.setLayout(new BorderLayout());
 
         scoreView.setLayout(new FlowLayout(Component.CENTER));
-        scoreView.getAllStyles().setPaddingTop(10);
-        scoreView.getAllStyles().setBorder(Border.createCompoundBorder(
-                                           Border.createLineBorder(1),
-                                           Border.createLineBorder(1),
-                                           Border.createLineBorder(0),
-                                           Border.createLineBorder(0)));
+        
 
         this.addKeyListener(eKeyCode, expandDoorCommand);
         this.addKeyListener(cKeyCode, contractDoorCommand);
@@ -120,7 +112,7 @@ Game extends Form
         this.addKeyListener(fKeyCode, fightCommand);
         this.addKeyListener(tKeyCode, tickCommand);
         this.addKeyListener(xKeyCode, exitCommand);
-        
+
         expandDoorButton.setCommand(expandDoorCommand);
         upButton.setCommand(moveSpaceshipUpCommand);
         leftButton.setCommand(moveSpaceshipLeftCommand);
@@ -173,146 +165,50 @@ Game extends Form
         controlSouth.add(fightButton);
         controlSouth.add(tickButton);
 
-        
         toolbar.getAllStyles().setPaddingTop(40);
         toolbar.setTitle("Space Fights Game");
         toolbar.setTitleCentered(true);
-        helpClickable = new Command("Help");
         toggleSound.putClientProperty("SideComponent", sideMenuCheckBox);
         toolbar.addCommandToSideMenu(toggleSound);
         toolbar.addCommandToSideMenu(exitCommand);
         toolbar.addCommandToSideMenu(rescueCommand);
-        toolbar.addCommandToRightBar(helpClickable);
+        toolbar.addCommandToSideMenu(aboutCommand);
+        toolbar.addCommandToRightBar(helpCommand);
 
         this.addComponent(BorderLayout.NORTH, scoreView);
         this.addComponent(BorderLayout.WEST, controlWest);
         this.addComponent(BorderLayout.EAST, controlEast);
         this.addComponent(BorderLayout.SOUTH, controlSouth);
+        this.addComponent(BorderLayout.CENTER, mapView);
 
         this.show();
+        /*
+         * container dimensions are set only after calling show()
+         * so we query them here and set locations of each game object
+         * randomly within these limits, but not necessarily inside the
+         * MapView container yet.
+         */
+        mapHeight = getMapHeight();
+        mapWidth = getMapWidth();
+        gameWorld.initLocationsOnMap();
+
+        System.out.println("MapView dimensions are: " +
+                            mapWidth + "x" + mapHeight + 
+                            " (width X height)\n");
+        System.out.println("''''''''''''''''''''''''''''''''''''''" +
+                           "''''''''''''''''''''''''''''''''''''''\n");
+    }
+
+    public static int
+    getMapHeight()
+    {
+        return mapView.getHeight();
     }
     
-    public ScoreView
-    getScoreView()
+    public static int
+    getMapWidth()
     {
-        return this.scoreView;
+        return mapView.getWidth();
     }
 
-    public MapView
-    getMapView()
-    {
-        return this.mapView;
-    }
-
-//    private void
-//    play()
-//    {
-//        Label label = new Label("Enter a Command:");
-//        this.addComponent(label);
-//        final TextField commandField = new TextField();
-//        this.addComponent(commandField);
-//        this.show();
-//
-//        commandField.addActionListener
-//        (
-//            new ActionListener()
-//            {
-//                public void
-//                actionPerformed(ActionEvent evt)
-//                {
-//                    String command = commandField.getText().toString();
-//                    commandField.clear();
-//                    switch (command.charAt(0))
-//                    {
-//                        case 'a':
-//                            gw.transferSpaceshipToAlien();
-//                            System.out.println("The spaceship has transferred to a randomly selected alien.");
-//                            break;
-//                        case 'o':
-//                            gw.transferSpaceshipToAstronaut();
-//                            System.out.println("The spaceship has transferred to a randomly selected astronaut.");
-//                            break;
-//                        case 'e':
-//                            if(gw.expandSpaceshipDoor())
-//                                System.out.println("The spaceship door expands.");
-//                            else
-//                                System.out.println("ERROR: The size of the spaceship door is already reached its maximum."
-//                                                 + " Expand failed.");
-//                            break;
-//                        case 'c':
-//                            if (gw.contractSpaceshipDoor())
-//                                System.out.println("The spaceship door contracts.");
-//                            else
-//                                System.out.println("ERROR: The size of the spaceship door is already reached its minimum."
-//                                                 + " Contract failed.");
-//                            break;
-//                        case 'r':
-//                            gw.moveSpaceshipRight();
-//                            System.out.println("The spaceship moves right.");
-//                            break;
-//                        case 'l':
-//                            gw.moveSpaceshipLeft();
-//                            System.out.println("The spaceship moves left.");
-//                            break;
-//                        case 'u':
-//                            gw.moveSpaceshipUp();
-//                            System.out.println("The spaceship moves up.");
-//                            break;
-//                        case 'd':
-//                            gw.moveSpaceshipDown();
-//                            System.out.println("The spaceship moves down.");
-//                            break;
-//                        case 's':
-//                            gw.openSpaceshipDoor();
-//                            System.out.println("The spaceship door opens.");
-//                            gw.rescue();
-//                            System.out.println("Current score: " + gw.getScore());
-//                            gw.closeSpaceshipDoor();
-//                            System.out.println("The door automatically shuts.");
-//                            break;
-//                        case 'x':
-//                            System.out.println("Do you want to exit? (y) yes, (n) no.");
-//                            break;
-//                        case 'y':
-//                            System.exit(0);
-//                        case 'n':
-//                            break;
-//                        case 'm':
-//                            System.out.println("Here is the current world state: \n");
-//                            gw.map();
-//                            System.out.print("\n");
-//                            break;
-//                        case 't':
-//                            gw.tick();
-//                            System.out.println("The clock has ticked. All opponents have moved.");
-//                            break;
-//                        case 'f':
-//                            if (gw.fight() == true)
-//                                System.out.println("A fight breaks out between alien and astronaut... "
-//                                                  + "The astronaut's health has decreased.");
-//                            else
-//                                System.out.println("ERROR: There are no aliens remaining to fight.");
-//                            break;
-//                        case 'p':
-//                            System.out.println(gw.toString());
-//                            break;
-//                        case 'w':
-//                            if (gw.aliensCollide() == true)
-//                                System.out.println("Two aliens collide... A new alien has spawned!");
-//                            else
-//                                System.out.println("ERROR: There are less than two aliens remaining. "
-//                                                  + "There can not be a collision.");
-//                            break;
-//                        default:
-//                            System.out.println("Unknown command given... Ignoring input.");
-//                            break;
-//                    }
-//                    if (gw.getAstronautsRemaining() == 0) {
-//                        System.out.println("All astronauts rescued! The game has ended.");
-//                        System.exit(0);
-//                    }
-//                }
-//            }
-//        );
-//    }
 }
