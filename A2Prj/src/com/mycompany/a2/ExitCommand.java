@@ -9,9 +9,9 @@ public class
 ExitCommand extends Command
 {
     private boolean exitConfirm    = false;
-    private String  exit           = "Exit";
-    private String  cancel         = "Cancel";
-    private String  exitDialogBody = "Are you sure you want to exit?";
+    private String   exit           = "Exit";
+    private String   cancel         = "Cancel";
+    private String   exitDialogBody = "Are you sure you want to exit?";
 
     public
     ExitCommand()
@@ -22,9 +22,9 @@ ExitCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
-        exitConfirm = Dialog.show(
-                "Confirm Exit", exitDialogBody, exit, cancel
-        );
+        exitConfirm = Dialog.show( "Confirm Exit",
+                                    exitDialogBody,
+                                    exit, cancel );
         if (exitConfirm)
             Display.getInstance().exitApplication();
     }
