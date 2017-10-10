@@ -68,7 +68,7 @@ GameObjectCollection implements ICollection
         public
         GameObjectCollectionIterator()
         {
-            this.idx = -1;
+            idx = -1;
         }
         public boolean
         hasNext()
@@ -86,7 +86,14 @@ GameObjectCollection implements ICollection
             idx++;
             return gameObjectCollection.get(idx);
         }
-    		
+
+        /*
+         * when an object is removed from the array list
+         * all elements to the right of that object shift left.
+         * We must decrement the counter so that the very next
+         * element will not get skipped by getNext() since it 
+         * is placed at the current index.
+         */
         public void
         remove()
         {
