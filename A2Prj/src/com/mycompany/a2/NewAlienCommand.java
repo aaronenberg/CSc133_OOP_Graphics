@@ -11,15 +11,19 @@ NewAlienCommand extends Command
     NewAlienCommand(GameWorld gw)
     {
         super("NewAlien");
-        this.target = gw;
+        target = gw;
     }
     
     public void
     actionPerformed(ActionEvent evt)
     {
-        target.aliensCollide();
-        System.out.println("A new alien spawns.\n");
-
+        if (target.getAliensRemaining() >= 2) {
+            target.aliensCollide();
+            System.out.println("Two aliens collide... A new alien spawns.\n");
+        }
+        else
+            System.out.println("ERROR: There are less than two aliens remaining. "
+                             + "There can not be a collision.\n");
         System.out.println("''''''''''''''''''''''''''''''''''''''" +
                 "''''''''''''''''''''''''''''''''''''''\n");
     }
