@@ -4,7 +4,7 @@ import com.codename1.charts.util.ColorUtil;
 
 
 /*
- * Astronaut is a concrete sublcass of Opponent. Its purpose is to
+ * Astronaut is a concrete subclass of Opponent. Its purpose is to
  * define the behaviors and characteristics of an astronaut instance.
  * Astronauts have a health attribute to which its speed and color
  * are directly correlated. An astronaut that collides with and alien
@@ -15,7 +15,7 @@ public class
 Astronaut extends Opponent
 {
     private static final int INIT_HEALTH = 5;
-    private static final int ATTACK_POWER = 1;
+    private static final int ATTACK_DAMAGE = 1;
     private static final int FADE_GREEN = 15;
     private static final int HINT_OF_RED = 15;
     private static final int DARK_GREEN = 128;
@@ -27,20 +27,26 @@ Astronaut extends Opponent
     {
         super();
         super.setColor(HINT_OF_RED, DARK_GREEN, ZERO_BLUE);
-        this.health = INIT_HEALTH;
+        health = INIT_HEALTH;
+        super.setSpeed(health);
     }
     
     public int
     getHealth()
     {
-        return this.health;
+        return health;
     }
 
     private void
     updateHealth()
     {
-        if (getHealth() != 0)
-            this.health -= ATTACK_POWER;
+        if (health != 0)
+            health -= ATTACK_DAMAGE;
+    }
+    private void
+    updateSpeed()
+    {
+        super.setSpeed(health);
     }
     
     private void
@@ -49,7 +55,12 @@ Astronaut extends Opponent
         setColor(r, g - FADE_GREEN, b);   
     }
 
-    // called by GameWorld.fight()
+    /* GameWorld.fight() calls this method with which
+     * we are pretending a collision between alien
+     * and astronaut has occurred. The collision
+     * damages the astronaut, decreasing it's health by 1,
+     * changes it's color, and decreases it's speed by 1.
+     */
     public void
     collidesWithAlien()
     {
@@ -57,27 +68,22 @@ Astronaut extends Opponent
         updateColor(ColorUtil.red(getColor()),
                     ColorUtil.green(getColor()),
                     ColorUtil.blue(getColor()));
-    }
-    
-    public int
-    getSpeed()
-    {
-        return super.getSpeed() * getHealth();
+        updateSpeed();
     }
 
     public String
     toString()
     {
         String opponentString = super.toString();
-        return "Astronaut: " + opponentString + " health=" + getHealth();
+        return "Astronaut: " + opponentString + " health=" + health;
     }
     
 
-     // if health is 0, do not allow opponent to move
+     // Astronauts with zero health left can not move, they are dead.
     public void
     move()
     {
-        if (getHealth() != 0)
+        if (health != 0)
             super.move();
     }
 }

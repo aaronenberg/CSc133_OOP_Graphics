@@ -16,6 +16,7 @@ Alien extends Opponent
     Alien()
     {
         super();
+        super.setSpeed(SPEED_MULTIPLIER);
         super.setColor(ZERO_RED, HINT_OF_GREEN, DARK_BLUE);
     }
     
@@ -32,12 +33,6 @@ Alien extends Opponent
     setColor(int r, int g, int b) 
     {}
 
-    public int
-    getSpeed()
-    {
-        return super.getSpeed() * SPEED_MULTIPLIER;
-        
-    }
     public void
     setSpeed(int spd)
     {}
