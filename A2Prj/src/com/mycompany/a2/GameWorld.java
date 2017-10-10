@@ -2,6 +2,7 @@ package com.mycompany.a2;
 
 
 import java.util.Observable;
+import java.util.Random;
 
 
 /*
@@ -21,17 +22,17 @@ import java.util.Observable;
 public class
 GameWorld extends Observable
 {
-    private static final int INIT_ALIENS = 3;
-    private static final int INIT_ASTRONAUTS = 4;
-    private static final int ALIEN_BREACH_PENALTY = 10;
-    private int astronautsRescued = 0;
-    private int astronautsRemaining = INIT_ASTRONAUTS;
-    private int aliensSnuckIn = 0;
-    private int aliensRemaining = INIT_ALIENS;
-    private int totalScore = 0;
-    private boolean soundOn = false;
-    private GameObjectCollection gameObjectCollection;
-    private Spaceship spaceship;
+    private static final int    INIT_ALIENS           = 3;
+    private static final int    INIT_ASTRONAUTS       = 4;
+    private static final int    ALIEN_BREACH_PENALTY = 10;
+    private int                  astronautsRescued       = 0;
+    private int                  astronautsRemaining     = INIT_ASTRONAUTS;
+    private int                  aliensSnuckIn           = 0;
+    private int                  aliensRemaining         = INIT_ALIENS;
+    private int                  totalScore              = 0;
+    private boolean              soundOn                 = false;
+    private GameObjectCollection  gameObjectCollection;
+    private Spaceship             spaceship;
 
     public void
     init()
@@ -119,12 +120,7 @@ GameWorld extends Observable
         notifyObservers();
     }
 
-    /*
-     * when an object is removed from the list
-     * all elements to the right of that object shift left,
-     * so we must decrement the counter or else the very next
-     * element would be skipped.
-     */
+
     public boolean
     rescue()
     {
@@ -144,8 +140,8 @@ GameWorld extends Observable
         }
         if (aboardShip) {
             System.out.println("The door automatically shuts.\n");
-            this.setChanged();
-            this.notifyObservers();
+            setChanged();
+            notifyObservers();
         }
         return aboardShip;
     }
@@ -153,7 +149,7 @@ GameWorld extends Observable
     public void
     spaceshipToAlien()
     {
-        Alien alien = getRandomRemainingAlien();
+        Alien alien = gameObjectCollection.getRandomRemainingAlien();
         spaceship.jumpToLocation(alien.getX(), alien.getY());
         setChanged();
         notifyObservers();
@@ -162,7 +158,7 @@ GameWorld extends Observable
     public void
     spaceshipToAstronaut()
     {
-        Astronaut astronaut = getRandomRemainingAstronaut();
+        Astronaut astronaut = gameObjectCollection.getRandomRemainingAstronaut();
         spaceship.jumpToLocation(astronaut.getX(), astronaut.getY());
         setChanged();
         notifyObservers();
@@ -210,7 +206,7 @@ GameWorld extends Observable
         boolean opponentsMoved = false;
         
         // check there is at least one opponent to move
-        while (gameObjects.hasNext() && (this.astronautsRemaining + this.aliensRemaining) > 0) {
+        while (gameObjects.hasNext() && (astronautsRemaining + aliensRemaining) > 0) {
             GameObject gameObject = gameObjects.getNext();
 
             if (gameObject instanceof IMoving) {
@@ -220,36 +216,32 @@ GameWorld extends Observable
             }   
         }
         if (opponentsMoved) {
-            this.setChanged();
-            this.notifyObservers();
+            setChanged();
+            notifyObservers();
         }
     }
     
     public int
     getAliensRemaining()
     {
-        return this.aliensRemaining;
+        return aliensRemaining;
     }
     
     public int
     getAstronautsRemaining()
     {
-        return this.astronautsRemaining;
+        return astronautsRemaining;
     }
 
-    public boolean
+    public void
     aliensCollide()
     {
-        boolean collisionOccured = false;
-
         if (getAliensRemaining() >= 2) {
             gameObjectCollection.add(nearbyAlien());
-            this.aliensRemaining++;
-            collisionOccured = true;
-            this.setChanged();
-            this.notifyObservers();
+            aliensRemaining++;
+            setChanged();
+            notifyObservers();
         }
-        return collisionOccured;
     }
     
     /*
@@ -264,7 +256,7 @@ GameWorld extends Observable
     {
         float nearbyX;
         float nearbyY;
-        Alien randomRemainingAlien = getRandomRemainingAlien();
+        Alien randomRemainingAlien = gameObjectCollection.getRandomRemainingAlien();
         
         if (randomRemainingAlien.xAtMaxWidth())
             nearbyX = randomRemainingAlien.getX() - 2;
@@ -280,25 +272,13 @@ GameWorld extends Observable
         
         return spawnedAlien;
     }
-    
-    private Alien
-    getRandomRemainingAlien()
-    {
-        return gameObjectCollection.getRandomRemainingAlien();
-    }
-    
-    private Astronaut
-    getRandomRemainingAstronaut()
-    {
-        return gameObjectCollection.getRandomRemainingAstronaut();
-    }
-    
+
     public boolean
     fight()
     {
-        if (this.aliensRemaining > 0 && this.astronautsRemaining > 0) {
+        if (aliensRemaining > 0 && astronautsRemaining > 0) {
             Astronaut randomAstronaut;
-            randomAstronaut = getRandomRemainingAstronaut();
+            randomAstronaut = gameObjectCollection.getRandomRemainingAstronaut();
             randomAstronaut.collidesWithAlien();
             setChanged();
             notifyObservers();
@@ -310,41 +290,78 @@ GameWorld extends Observable
     public int
     getAstronautsRescued()
     {
-        return this.astronautsRescued;
+        return astronautsRescued;
     }
     public int
     getAliensSnuckIn()
     {
-        return this.aliensSnuckIn;
+        return aliensSnuckIn;
     }
     
     public int
     getScore()
     {
-        return this.totalScore;
+        return totalScore;
     }
     
     public boolean
     getSound()
     {
-        return this.soundOn;
+        return soundOn;
     }
 
     public void
     toggleSound()
     {
-        this.soundOn = !(this.soundOn);
+        soundOn = !soundOn;
         setChanged();
         notifyObservers();
+    }
+    
+    public GameObjectCollection
+    getGameObjectCollection()
+    {
+        return gameObjectCollection;
+    }
+    
+    public void
+    initLocationsOnMap()
+    {
+        IIterator gameObjects = gameObjectCollection.getIterator();
+        while (gameObjects.hasNext()) {
+            GameObject gameObject = gameObjects.getNext();
+            gameObject.setLocation(randomX(Game.getMapWidth()),
+                                   randomY(Game.getMapHeight()));
+        }
+        setChanged();
+        notifyObservers();
+    }
+
+    public float
+    randomX(int mapHeight)
+    {
+        Random rX = new Random();
+        float x = rX.nextFloat() * Game.getMapWidth();
+        float roundedX = Math.round(x*10.0f)/10.0f;
+        return roundedX;
+    }
+
+    public float
+    randomY(int mapWidth)
+    {
+        Random rY = new Random();
+        float y = rY.nextFloat() * Game.getMapHeight();
+        float roundedY = Math.round(y*10.0f)/10.0f;
+        return roundedY;
     }
     
     public void
     updateScore(Opponent opponent)
     {
         if (opponent instanceof Alien) {
-            this.totalScore -= ALIEN_BREACH_PENALTY;
-            this.aliensRemaining--;
-            this.aliensSnuckIn++;
+            totalScore -= ALIEN_BREACH_PENALTY;
+            aliensRemaining--;
+            aliensSnuckIn++;
             System.out.println("An alien sneaks in!");
         }
         else if (opponent instanceof Astronaut)
@@ -352,9 +369,9 @@ GameWorld extends Observable
             int reward = 0;
             int health = ((Astronaut) opponent).getHealth();
             reward = health + 5;
-            this.totalScore += reward;
-            this.astronautsRemaining--;
-            this.astronautsRescued++;
+            totalScore += reward;
+            astronautsRemaining--;
+            astronautsRescued++;
             System.out.println("You rescue an astronaut.");
         }
     }

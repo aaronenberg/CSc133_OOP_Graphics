@@ -11,17 +11,18 @@ import java.lang.Math;
  * the IMoving interface given an opponent's speed and direction.
  * skewDirection() keeps an opponent from moving in a straight line.
  * if an opponent hits a wall changeDirection() turns them in the
- * opposite direction.
+ * opposite direction. centerHitEdge() and xAtMaxWidth() also prevent
+ * an opponent from moving or spawning outside of world limits.
  */
 
 public abstract class
 Opponent extends GameObject implements IMoving
 {
-
+    private static final float WORLD_ORIGIN = (float) 0.0;
     private static final int MIN_OPP_SIZE = 20;
     private static final int MAX_OPP_SIZE = 50;
-    private static final int DEGREES_OPP_DIRECTION = 359;
-    private static final int COMPASS_OFFSET = 90;
+    private static final int DIRECTION_ANGLE_DEGREES = 359;
+    private static final int COMPASS_ANGLE_OFFSET = 90;
     private static final int SPEED_CONSTANT = 1;
     private static final int SMALL_DEGREE = 3;
     private int speed = SPEED_CONSTANT;
@@ -33,7 +34,7 @@ Opponent extends GameObject implements IMoving
     Opponent()
     {
         super();
-        this.direction = randomizeDirection();
+        direction = randomizeDirection();
         super.setSize(randomizeSize());
     }
 
@@ -54,17 +55,17 @@ Opponent extends GameObject implements IMoving
         int smallRandomDegree = random.nextInt(SMALL_DEGREE) + 3;
         if (smallRandomDegree % 2 == 0)
         {
-            if (this.direction < (DEGREES_OPP_DIRECTION - smallRandomDegree))
-                this.direction += smallRandomDegree;
+            if (direction < (DIRECTION_ANGLE_DEGREES - smallRandomDegree))
+                direction += smallRandomDegree;
             else
-                this.direction -= smallRandomDegree;
+                direction -= smallRandomDegree;
         }
         else
         {
-            if (this.direction > (smallRandomDegree))
-                this.direction -= smallRandomDegree;
+            if (direction > (smallRandomDegree))
+                direction -= smallRandomDegree;
             else
-                this.direction += smallRandomDegree;
+                direction += smallRandomDegree;
         }
             
     }
@@ -72,16 +73,23 @@ Opponent extends GameObject implements IMoving
     public int
     getDirection()
     {
-        return this.direction;
+        return direction;
     }
     
+    /*
+     * causes the opponent to face the opposite direction.
+     * Called by move() to keep opponent from traveling
+     * off of the map.
+     */
     private void
     changeDirection()
     {
-        if (this.direction < 180)
-            this.direction += 180;
+        final int DEGREES_180 = 180;
+
+        if (direction < DEGREES_180)
+            direction += DEGREES_180;
         else
-            this.direction -= 180;
+            direction -= DEGREES_180;
     }
  
     /*
@@ -91,15 +99,15 @@ Opponent extends GameObject implements IMoving
     private int
     randomizeSize()
     {
-        this.randomSize = new Random();
+        randomSize = new Random();
         return randomSize.nextInt(MAX_OPP_SIZE - MIN_OPP_SIZE) + MIN_OPP_SIZE;
     }
 
     private int
     randomizeDirection()
     {
-        this.randomDegree = new Random();
-        return randomDegree.nextInt(DEGREES_OPP_DIRECTION);
+        randomDegree = new Random();
+        return randomDegree.nextInt(DIRECTION_ANGLE_DEGREES);
     }
     
     /*
@@ -111,7 +119,7 @@ Opponent extends GameObject implements IMoving
     private double
     theta()
     {
-        double compassAngleInDegrees = (double)(COMPASS_OFFSET - this.direction);
+        double compassAngleInDegrees = (double)(COMPASS_ANGLE_OFFSET - direction);
         double compassAngleInRadians = Math.toRadians(compassAngleInDegrees);
         return compassAngleInRadians;
     }
@@ -121,10 +129,10 @@ Opponent extends GameObject implements IMoving
     {
         if (centerHitEdge())
             changeDirection();
-        double deltaX = Math.cos(theta()) * this.speed;
-        double deltaY = Math.sin(theta()) * this.speed;
-        float x = (float) Math.round((this.getX() + deltaX));
-        float y = (float) Math.round((this.getY() + deltaY));
+        double deltaX = Math.cos(theta()) * speed;
+        double deltaY = Math.sin(theta()) * speed;
+        float x = (float) Math.round((getX() + deltaX));
+        float y = (float) Math.round((getY() + deltaY));
         this.setLocation(x, y);
         this.skewDirection();
     }
@@ -132,19 +140,93 @@ Opponent extends GameObject implements IMoving
     public int
     getSpeed()
     {
-        return this.speed;
+        return speed;
     }
     
     public void
-    setSpeed(int speed)
+    setSpeed(int speedMultiplier)
     {
-        this.speed = speed;
+        speed = speedMultiplier * SPEED_CONSTANT;
+    }
+
+    /*
+     * Check to see if the opponent's center is within
+     * the map dimensions meaning neither of the 
+     * opponent's x or y coordinates are allowed
+     * to be equal to the map's width or height, respectively.
+     * 
+     * With each Tick, we assume an opponent
+     * can move an amount equal to it's speed
+     * across a given axis, so we subtract
+     * their speed from the map dimensions.
+     */
+    public boolean
+    centerHitEdge()
+    {
+        boolean centerHitEdge = true;
+        float x = getX();
+        float y = getY();
+        if (
+                (x > (WORLD_ORIGIN + speed) && x < (Game.getMapWidth() - speed)) &&
+                (y > (WORLD_ORIGIN + speed) && y < (Game.getMapHeight() - speed))
+            )
+            return centerHitEdge = false;
+        return centerHitEdge;
+    }
+
+    public boolean
+    xAtMaxWidth()
+    {
+        boolean xAtMaxWidth = false;
+        if (centerHitEdge())
+        {
+            float x = getX();
+            if (x >= Game.getMapWidth())
+                xAtMaxWidth = true;
+        }
+        return xAtMaxWidth;
+    }
+    public boolean
+    yAtMaxHeight()
+    {
+        boolean yAtMaxHeight = false;
+        if (centerHitEdge())
+        {
+            float y = getY();
+            if (y >= Game.getMapHeight())
+                yAtMaxHeight = true;
+        }
+        return yAtMaxHeight;
+    }
+    public boolean
+    yAtOriginHeight()
+    {
+        boolean yAtOriginHeight = false;
+        if (centerHitEdge())
+        {
+            float y = getY();
+            if (y <= WORLD_ORIGIN)
+                yAtOriginHeight = true;
+        }
+        return yAtOriginHeight;
+    }
+    public boolean
+    xAtOriginWidth()
+    {
+        boolean xAtOriginWidth = false;
+        if (centerHitEdge())
+        {
+            float y = getY();
+            if (y <= WORLD_ORIGIN)
+                xAtOriginWidth = true;
+        }
+        return xAtOriginWidth;
     }
     
     public String
     toString()
     {
         String GameObjString = super.toString();
-        return GameObjString + " speed=" + getSpeed() + " dir=" + getDirection();
+        return GameObjString + " speed=" + speed + " dir=" + direction;
     }
 }
