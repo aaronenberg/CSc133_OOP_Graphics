@@ -12,7 +12,7 @@ ToggleSoundCommand extends Command
     public
     ToggleSoundCommand(GameWorld gw)
     {
-        super("Sound");
+        super("      Sound");
         target = gw;
     }
     
