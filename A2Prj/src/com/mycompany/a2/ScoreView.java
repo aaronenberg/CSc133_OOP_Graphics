@@ -1,7 +1,6 @@
 package com.mycompany.a2;
 
 
-import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
 import com.codename1.ui.Label;
@@ -14,16 +13,17 @@ public class
 ScoreView extends Container implements Observer
 {
     private Label totalScoreLabel          = new Label(),
-                   astronautsRescuedLabel   = new Label(),
-                   astronautsRemainingLabel = new Label(),
-                   aliensSnuckInLabel       = new Label(),
-                   aliensRemainingLabel     = new Label();
-    private Label totalScoreValue          = new Label(),
-                   astronautsRescuedValue   = new Label(),
-                   astronautsRemainingValue = new Label(),
-                   aliensSnuckInValue       = new Label(),
-                   aliensRemainingValue     = new Label();
-    private static Label soundLabel       = new Label();
+                  astronautsRescuedLabel   = new Label(),
+                  astronautsRemainingLabel = new Label(),
+                  aliensSnuckInLabel       = new Label(),
+                  aliensRemainingLabel     = new Label(),
+                  totalScoreValue          = new Label(),
+                  astronautsRescuedValue   = new Label(),
+                  astronautsRemainingValue = new Label(),
+                  aliensSnuckInValue       = new Label(),
+                  aliensRemainingValue     = new Label();
+    private static Label soundLabel        = new Label(),
+                         soundValue        = new Label();
 
     public
     ScoreView()
@@ -39,7 +39,8 @@ ScoreView extends Container implements Observer
         add(aliensRemainingLabel);
         add(aliensRemainingValue);
         add(soundLabel);
-       
+        add(soundValue);
+
         getAllStyles().setPaddingTop(10);
         getAllStyles().setBorder(Border.createCompoundBorder(
                                  Border.createLineBorder(1),
@@ -47,11 +48,12 @@ ScoreView extends Container implements Observer
                                  Border.createLineBorder(0),
                                  Border.createLineBorder(0)));
 
-        totalScoreLabel.setText("Total Score: ");
-        astronautsRescuedLabel.setText("Astronauts Rescued: ");
-        aliensSnuckInLabel.setText("Aliens Snuck In: ");
-        astronautsRemainingLabel.setText("Astronauts Remaining: ");
-        aliensRemainingLabel.setText("Aliens Remaining: ");
+        totalScoreLabel.setText("Total Score:");
+        astronautsRescuedLabel.setText("Astronauts Rescued:");
+        aliensSnuckInLabel.setText("Aliens Snuck In:");
+        astronautsRemainingLabel.setText("Astronauts Remaining:");
+        aliensRemainingLabel.setText("Aliens Remaining:");
+        soundLabel.setText("Sound:");
     }
 
     public void
@@ -59,20 +61,15 @@ ScoreView extends Container implements Observer
     {
         GameWorld gw = (GameWorld) observable;
 
-//        totalScoreLabel.setText("Total Score: " + gw.getScore() + "       ");
-//        astronautsRescuedLabel.setText("Astronauts Rescued: " + gw.getAstronautsRescued());
-//        aliensSnuckInLabel.setText("Aliens Snuck In: " + gw.getAliensSnuckIn());
-//        astronautsRemainingLabel.setText("Astronauts Remaining: " + gw.getAstronautsRemaining());
-//        aliensRemainingLabel.setText("Aliens Remaining: " + gw.getAliensRemaining());
+        totalScoreValue.setText(         " " + gw.getScore());
+        astronautsRescuedValue.setText(  " " + gw.getAstronautsRescued());
+        aliensSnuckInValue.setText(      " " + gw.getAliensSnuckIn());
+        astronautsRemainingValue.setText(" " + gw.getAstronautsRemaining());
+        aliensRemainingValue.setText(    " " + gw.getAliensRemaining());
+        soundValue.setText(              " " + checkSoundStatus(gw.getSound()));
 
-        totalScoreValue.setText(gw.getScore() + "       ");
-        astronautsRescuedValue.setText(gw.getAstronautsRescued() + "");
-        aliensSnuckInValue.setText(gw.getAliensSnuckIn() + "");
-        astronautsRemainingValue.setText(gw.getAstronautsRemaining() + "");
-        aliensRemainingValue.setText(gw.getAliensRemaining() + "");
+        this.repaint();
 
-        soundLabel.setText("Sound: " + checkSoundStatus(gw.getSound()));
-        
         if (gw.getAstronautsRemaining() == 0) {
             System.out.println("All astronauts have been rescued! " +
                                "The spaceship flies back into space.\n");
@@ -82,7 +79,7 @@ ScoreView extends Container implements Observer
             Display.getInstance().exitApplication();
         }
     }
-    
+
     public String
     checkSoundStatus(Boolean soundOn)
     {
@@ -91,11 +88,11 @@ ScoreView extends Container implements Observer
         else
             return "OFF";
     }
-    
+
     public static String
     getSoundText()
     {
-        return soundLabel.getText();
+        return soundLabel.getText() + soundValue.getText();
     }
 
 }
