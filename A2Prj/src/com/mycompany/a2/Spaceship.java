@@ -10,12 +10,12 @@ package com.mycompany.a2;
 public class
 Spaceship extends Rescuer
 {
-    private static final int HINT_OF_RED = 15;
-    private static final int DARK_GREEN = 128;
-    private static final int HINT_OF_BLUE = 30;
-    private static final int DOOR_RESIZE = 10;
-    private static final int DOOR_MINIMUM_SIZE = 50;
-    private static final int DOOR_MAXIMUM_SIZE = 1024;
+    private static final int HINT_OF_RED = 15,
+                             DARK_GREEN = 128,
+                             HINT_OF_BLUE = 30,
+                             DOOR_RESIZE = 10,
+                             DOOR_MINIMUM_SIZE = 50,
+                             DOOR_MAXIMUM_SIZE = 1024;
     private boolean doorState;
     private static Spaceship spaceship;
     

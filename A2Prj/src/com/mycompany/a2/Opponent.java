@@ -19,15 +19,17 @@ public abstract class
 Opponent extends GameObject implements IMoving
 {
     private static final float WORLD_ORIGIN = (float) 0.0;
-    private static final int MIN_OPP_SIZE = 20;
-    private static final int MAX_OPP_SIZE = 50;
-    private static final int DIRECTION_ANGLE_DEGREES = 359;
-    private static final int COMPASS_ANGLE_OFFSET = 90;
-    private static final int SPEED_CONSTANT = 1;
-    private static final int SMALL_DEGREE = 3;
-    private int speed = SPEED_CONSTANT;
-    private int direction;
-    private Random random, randomDegree, randomSize;
+    private static final int   MIN_OPP_SIZE = 20,
+                               MAX_OPP_SIZE = 50,
+                               DIRECTION_ANGLE_DEGREES = 359,
+                               COMPASS_ANGLE_OFFSET = 90,
+                               SPEED_CONSTANT = 1,
+                               SMALL_DEGREE = 3;
+    private int speed = SPEED_CONSTANT,
+                direction;
+    private Random random,
+                   randomDegree,
+                   randomSize;
     
     
     public

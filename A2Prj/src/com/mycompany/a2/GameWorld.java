@@ -10,7 +10,7 @@ import java.util.Random;
  * the methods to directly manipulate the GameObject
  * instances. It also keeps track of the game's state
  * including number of astronauts and aliens remaining,
- *  number of astronauts and aliens that got into the 
+ *  number of astronauts and aliens that got into the
  *  spaceship and the total points earned.
  *  It is responsible for instantiating all GameObjects
  *  at the start of the game and creating or removing
@@ -22,17 +22,17 @@ import java.util.Random;
 public class
 GameWorld extends Observable
 {
-    private static final int    INIT_ALIENS           = 3;
-    private static final int    INIT_ASTRONAUTS       = 4;
-    private static final int    ALIEN_BREACH_PENALTY = 10;
-    private int                  astronautsRescued       = 0;
-    private int                  astronautsRemaining     = INIT_ASTRONAUTS;
-    private int                  aliensSnuckIn           = 0;
-    private int                  aliensRemaining         = INIT_ALIENS;
-    private int                  totalScore              = 0;
-    private boolean              soundOn                 = false;
-    private GameObjectCollection  gameObjectCollection;
-    private Spaceship             spaceship;
+    private static final int INIT_ALIENS          = 3,
+                             INIT_ASTRONAUTS      = 4,
+                             ALIEN_BREACH_PENALTY = 10;
+    private int astronautsRescued   = 0,
+                astronautsRemaining = INIT_ASTRONAUTS,
+                aliensSnuckIn       = 0,
+                aliensRemaining     = INIT_ALIENS,
+                totalScore          = 0;
+    private boolean   soundOn       = false;
+    private Spaceship spaceship;
+    private GameObjectCollection gameObjectCollection;
 
     public void
     init()
@@ -46,36 +46,36 @@ GameWorld extends Observable
 
 	for (int i = 0; i < INIT_ALIENS; i++)
 	    gameObjectCollection.add(new Alien());
-	
+
 	System.out.println("Space fights game world initialized.\n");
-	
+
 	setChanged();
     }
-	
+
     public boolean
     expandSpaceshipDoor()
     {
-        boolean doorCanExpand = spaceship.doorCanExpand();
-        if (doorCanExpand) {
+        boolean doorExpandable = spaceship.doorCanExpand();
+        if (doorExpandable) {
             spaceship.expandDoor();
             setChanged();
             notifyObservers();
         }
-        return doorCanExpand;
+        return doorExpandable;
     }
-    
+
     public boolean
     contractSpaceshipDoor()
     {
-        boolean doorCanContract = spaceship.doorCanContract();
-        if (doorCanContract) {
+        boolean doorContractable = spaceship.doorCanContract();
+        if (doorContractable) {
             spaceship.contractDoor();
             setChanged();
             notifyObservers();
         }
-        return doorCanContract;
+        return doorContractable;
     }
-    
+
     public void
     openSpaceshipDoor()
     {
@@ -87,7 +87,7 @@ GameWorld extends Observable
     {
         spaceship.closeDoor();
     }
-    
+
     public void
     moveSpaceshipLeft()
     {
@@ -130,12 +130,12 @@ GameWorld extends Observable
         while (gameObjects.hasNext()) {
             GameObject gameObject = gameObjects.getNext();
 
-            if (gameObject instanceof Opponent 
+            if (gameObject instanceof Opponent
                 && opponentAtDoor((Opponent) gameObject) != null)
             {
                 aboardShip = true;
                 updateScore((Opponent) gameObject);
-                gameObjects.remove();  
+                gameObjects.remove();
             }
         }
         if (aboardShip) {
@@ -145,7 +145,7 @@ GameWorld extends Observable
         }
         return aboardShip;
     }
-    
+
     public void
     spaceshipToAlien()
     {
@@ -163,17 +163,17 @@ GameWorld extends Observable
         setChanged();
         notifyObservers();
     }
-    
+
     /*
      * Assuming the spaceship door is a square,
-     * the Opponent is at the door if it's center is located within 
+     * the Opponent is at the door if it's center is located within
      * plus or minus half of the spaceship's size from the center of spaceship.
      */
     private Opponent
     opponentAtDoor(Opponent opponent)
     {
         int halfSpaceshipSize = spaceship.getSize()/2;
-        
+
         if
         (
             ((opponent.getX() > (spaceship.getX() - halfSpaceshipSize)) &&
@@ -187,7 +187,7 @@ GameWorld extends Observable
         Opponent notFound = null;
         return notFound;
     }
-    
+
     public void
     map()
     {
@@ -198,13 +198,13 @@ GameWorld extends Observable
             System.out.println(gameObject.toString());
         }
     }
-    
+
     public void
     tick()
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
         boolean opponentsMoved = false;
-        
+
         // check there is at least one opponent to move
         while (gameObjects.hasNext() && (astronautsRemaining + aliensRemaining) > 0) {
             GameObject gameObject = gameObjects.getNext();
@@ -213,20 +213,20 @@ GameWorld extends Observable
                 IMoving movingGameObject = (IMoving) gameObject;
                 movingGameObject.move();
                 opponentsMoved = true;
-            }   
+            }
         }
         if (opponentsMoved) {
             setChanged();
             notifyObservers();
         }
     }
-    
+
     public int
     getAliensRemaining()
     {
         return aliensRemaining;
     }
-    
+
     public int
     getAstronautsRemaining()
     {
@@ -243,7 +243,7 @@ GameWorld extends Observable
             notifyObservers();
         }
     }
-    
+
     /*
      * If the randomly selected alien we've chosen to spawn near 
      * is too close to any edge of the GameWorld,
@@ -257,7 +257,7 @@ GameWorld extends Observable
         float nearbyX;
         float nearbyY;
         Alien randomRemainingAlien = gameObjectCollection.getRandomRemainingAlien();
-        
+
         if (randomRemainingAlien.xAtMaxWidth())
             nearbyX = randomRemainingAlien.getX() - 2;
         else
@@ -269,7 +269,7 @@ GameWorld extends Observable
             nearbyY = randomRemainingAlien.getY() + 2;
 
         Alien spawnedAlien = new Alien(nearbyX, nearbyY);
-        
+
         return spawnedAlien;
     }
 
@@ -286,7 +286,7 @@ GameWorld extends Observable
         }
         return false;
     }
-    
+
     public int
     getAstronautsRescued()
     {
@@ -297,13 +297,13 @@ GameWorld extends Observable
     {
         return aliensSnuckIn;
     }
-    
+
     public int
     getScore()
     {
         return totalScore;
     }
-    
+
     public boolean
     getSound()
     {
@@ -317,28 +317,27 @@ GameWorld extends Observable
         setChanged();
         notifyObservers();
     }
-    
+
     public GameObjectCollection
     getGameObjectCollection()
     {
         return gameObjectCollection;
     }
-    
+
     public void
     initLocationsOnMap()
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
         while (gameObjects.hasNext()) {
             GameObject gameObject = gameObjects.getNext();
-            gameObject.setLocation(randomX(Game.getMapWidth()),
-                                   randomY(Game.getMapHeight()));
+            gameObject.setLocation(randomX(), randomY());
         }
         setChanged();
         notifyObservers();
     }
 
-    public float
-    randomX(int mapHeight)
+    private float
+    randomX()
     {
         Random rX = new Random();
         float x = rX.nextFloat() * Game.getMapWidth();
@@ -346,15 +345,15 @@ GameWorld extends Observable
         return roundedX;
     }
 
-    public float
-    randomY(int mapWidth)
+    private float
+    randomY()
     {
         Random rY = new Random();
         float y = rY.nextFloat() * Game.getMapHeight();
         float roundedY = Math.round(y*10.0f)/10.0f;
         return roundedY;
     }
-    
+
     public void
     updateScore(Opponent opponent)
     {

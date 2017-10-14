@@ -13,8 +13,8 @@ import com.codename1.charts.util.ColorUtil;
 public abstract class
 GameObject
 {
-    private int size;
-    private int color;
+    private int size,
+                color;
     private Point location = new Point();
 
     public int

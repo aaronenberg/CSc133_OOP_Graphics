@@ -8,10 +8,10 @@ package com.mycompany.a2;
 public class
 Alien extends Opponent
 {
-    private static final int SPEED_MULTIPLIER = 5;
-    private static final int HINT_OF_GREEN = 15;
-    private static final int DARK_BLUE = 128;
-    private static final int ZERO_RED = 0;
+    private static final int SPEED_MULTIPLIER = 5,
+                             HINT_OF_GREEN    = 15,
+                             DARK_BLUE        = 128,
+                             ZERO_RED         = 0;
     public
     Alien()
     {

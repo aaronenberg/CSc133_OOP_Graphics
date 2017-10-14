@@ -15,10 +15,10 @@ import com.codename1.ui.plaf.Border;
 /*
  * Game is the controller which enforces rules as to what
  * commands a user can issue while playing the game.
- * It instantiates a GameWorld and calls its init() to 
+ * It instantiates a GameWorld and calls its init() to
  * populate the game with GameObjects. Also responsible
  * for prompting the user for input and taking certain actions
- * based on that input. Most of these actions are calls to 
+ * based on that input. Most of these actions are calls to
  * GameWorld methods. When there are no more astronauts remaining,
  * the game ends.
  */
@@ -30,33 +30,33 @@ Game extends Form
     private static MapView mapView;
     private int            mapHeight;
     private int            mapWidth;
-    
-    private static int eKeyCode = 101;
-    private static int cKeyCode =  99;
-    private static int sKeyCode = 115;
-    private static int rKeyCode = 114;
-    private static int lKeyCode = 108;
-    private static int uKeyCode = 117;
-    private static int dKeyCode = 100;
-    private static int oKeyCode = 111;
-    private static int aKeyCode =  97;
-    private static int wKeyCode = 119;
-    private static int fKeyCode = 102;
-    private static int tKeyCode = 116;
-    private static int xKeyCode = 120;
 
-    private Button expandDoorButton           = new Button();
-    private Button upButton                   = new Button();
-    private Button leftButton                 = new Button();
-    private Button spaceshipToAstronautButton = new Button();
-    private Button contractDoorButton         = new Button();
-    private Button downButton                 = new Button();
-    private Button rightButton                = new Button();
-    private Button spaceshipToAlienButton     = new Button();
-    private Button rescueButton               = new Button();
-    private Button newAlienButton             = new Button();
-    private Button fightButton                = new Button();
-    private Button tickButton                 = new Button();
+    private static int eKeyCode = 101,
+                       cKeyCode =  99,
+                       sKeyCode = 115,
+                       rKeyCode = 114,
+                       lKeyCode = 108,
+                       uKeyCode = 117,
+                       dKeyCode = 100,
+                       oKeyCode = 111,
+                       aKeyCode =  97,
+                       wKeyCode = 119,
+                       fKeyCode = 102,
+                       tKeyCode = 116,
+                       xKeyCode = 120;
+
+    private Button expandDoorButton           = new Button(),
+                   upButton                   = new Button(),
+                   leftButton                 = new Button(),
+                   spaceshipToAstronautButton = new Button(),
+                   contractDoorButton         = new Button(),
+                   downButton                 = new Button(),
+                   rightButton                = new Button(),
+                   spaceshipToAlienButton     = new Button(),
+                   rescueButton               = new Button(),
+                   newAlienButton             = new Button(),
+                   fightButton                = new Button(),
+                   tickButton                 = new Button();
 
     private ExpandDoorCommand           expandDoorCommand           = new ExpandDoorCommand(gameWorld);
     private MoveSpaceshipUpCommand      moveSpaceshipUpCommand      = new MoveSpaceshipUpCommand(gameWorld);
@@ -74,9 +74,9 @@ Game extends Form
     private ExitCommand                 exitCommand                 = new ExitCommand();
     private HelpCommand                 helpCommand                 = new HelpCommand();
     private AboutCommand                aboutCommand                = new AboutCommand();
-    
+
     private CheckBox sideMenuCheckBox = new CheckBox("Sound");
-    
+
     private Container controlWest;
     private Container controlEast;
     private Container controlSouth;
@@ -97,7 +97,6 @@ Game extends Form
         this.setLayout(new BorderLayout());
 
         scoreView.setLayout(new FlowLayout(Component.CENTER));
-        
 
         this.addKeyListener(eKeyCode, expandDoorCommand);
         this.addKeyListener(cKeyCode, contractDoorCommand);
@@ -193,10 +192,11 @@ Game extends Form
         gameWorld.initLocationsOnMap();
 
         System.out.println("MapView dimensions are: " +
-                            mapWidth + "x" + mapHeight + 
+                            mapWidth + "x" + mapHeight +
                             " (width X height)\n");
         System.out.println("''''''''''''''''''''''''''''''''''''''" +
                            "''''''''''''''''''''''''''''''''''''''\n");
+
     }
 
     public static int
@@ -204,7 +204,7 @@ Game extends Form
     {
         return mapView.getHeight();
     }
-    
+
     public static int
     getMapWidth()
     {

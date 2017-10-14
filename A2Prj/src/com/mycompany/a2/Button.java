@@ -10,13 +10,13 @@ Button extends com.codename1.ui.Button
     Button()
     {
         super();
-        this.getAllStyles().setAlignment(CENTER);
-        this.getAllStyles().setBgColor(ColorUtil.LTGRAY);
-        this.getAllStyles().setFgColor(ColorUtil.WHITE);
-        this.getAllStyles().setOpacity(250);
-        this.getAllStyles().setPaddingTop(40);
-        this.getAllStyles().setPaddingBottom(40);
-        this.getAllStyles().setPaddingRight(5);
-        this.getAllStyles().setPaddingLeft(5);
+        getAllStyles().setAlignment(CENTER);
+        getAllStyles().setBgColor(ColorUtil.LTGRAY);
+        getAllStyles().setFgColor(ColorUtil.WHITE);
+        getAllStyles().setOpacity(250);
+        getAllStyles().setPaddingTop(40);
+        getAllStyles().setPaddingBottom(40);
+        getAllStyles().setPaddingRight(5);
+        getAllStyles().setPaddingLeft(5);
     }
 }

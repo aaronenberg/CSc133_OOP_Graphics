@@ -14,12 +14,12 @@ import com.codename1.charts.util.ColorUtil;
 public class
 Astronaut extends Opponent
 {
-    private static final int INIT_HEALTH = 5;
-    private static final int ATTACK_DAMAGE = 1;
-    private static final int FADE_GREEN = 15;
-    private static final int HINT_OF_RED = 15;
-    private static final int DARK_GREEN = 128;
-    private static final int ZERO_BLUE = 0;
+    private static final int INIT_HEALTH   = 5,
+                             ATTACK_DAMAGE = 1,
+                             FADE_GREEN    = 15,
+                             HINT_OF_RED   = 15,
+                             DARK_GREEN    = 128,
+                             ZERO_BLUE     = 0;
     private int health;
 
     public
