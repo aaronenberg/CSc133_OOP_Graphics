@@ -32,31 +32,31 @@ Game extends Form
     private int            mapWidth;
 
     private static int eKeyCode = 101,
-                       cKeyCode =  99,
-                       sKeyCode = 115,
-                       rKeyCode = 114,
-                       lKeyCode = 108,
-                       uKeyCode = 117,
-                       dKeyCode = 100,
-                       oKeyCode = 111,
-                       aKeyCode =  97,
-                       wKeyCode = 119,
-                       fKeyCode = 102,
-                       tKeyCode = 116,
-                       xKeyCode = 120;
+                         cKeyCode =  99,
+                         sKeyCode = 115,
+                         rKeyCode = 114,
+                         lKeyCode = 108,
+                         uKeyCode = 117,
+                         dKeyCode = 100,
+                         oKeyCode = 111,
+                         aKeyCode =  97,
+                         wKeyCode = 119,
+                         fKeyCode = 102,
+                         tKeyCode = 116,
+                         xKeyCode = 120;
 
     private Button expandDoorButton           = new Button(),
-                   upButton                   = new Button(),
-                   leftButton                 = new Button(),
-                   spaceshipToAstronautButton = new Button(),
-                   contractDoorButton         = new Button(),
-                   downButton                 = new Button(),
-                   rightButton                = new Button(),
-                   spaceshipToAlienButton     = new Button(),
-                   rescueButton               = new Button(),
-                   newAlienButton             = new Button(),
-                   fightButton                = new Button(),
-                   tickButton                 = new Button();
+                    upButton                   = new Button(),
+                    leftButton                 = new Button(),
+                    spaceshipToAstronautButton = new Button(),
+                    contractDoorButton         = new Button(),
+                    downButton                 = new Button(),
+                    rightButton                = new Button(),
+                    spaceshipToAlienButton     = new Button(),
+                    rescueButton               = new Button(),
+                    newAlienButton             = new Button(),
+                    fightButton                = new Button(),
+                    tickButton                 = new Button();
 
     private ExpandDoorCommand           expandDoorCommand           = new ExpandDoorCommand(gameWorld);
     private MoveSpaceshipUpCommand      moveSpaceshipUpCommand      = new MoveSpaceshipUpCommand(gameWorld);

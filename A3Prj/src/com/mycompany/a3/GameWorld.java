@@ -22,15 +22,15 @@ import java.util.Random;
 public class
 GameWorld extends Observable
 {
-    private static final int INIT_ALIENS          = 3,
-                             INIT_ASTRONAUTS      = 4,
-                             ALIEN_BREACH_PENALTY = 10;
+    private static final int INIT_ALIENS           = 3,
+                                INIT_ASTRONAUTS      = 4,
+                                ALIEN_BREACH_PENALTY = 10;
     private int astronautsRescued   = 0,
-                astronautsRemaining = INIT_ASTRONAUTS,
-                aliensSnuckIn       = 0,
-                aliensRemaining     = INIT_ALIENS,
-                totalScore          = 0;
-    private boolean   soundOn       = false;
+                 astronautsRemaining = INIT_ASTRONAUTS,
+                 aliensSnuckIn       = 0,
+                 aliensRemaining     = INIT_ALIENS,
+                 totalScore          = 0;
+    private boolean soundOn        = false;
     private Spaceship spaceship;
     private GameObjectCollection gameObjectCollection;
 
