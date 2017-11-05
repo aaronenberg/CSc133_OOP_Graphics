@@ -11,10 +11,10 @@ import com.codename1.charts.util.ColorUtil;
  * random location that is within the world limits.
  */
 public abstract class
-GameObject
+GameObject implements IDrawable
 {
     private int size,
-                color;
+                 color;
     private Point location = new Point();
 
     public int
