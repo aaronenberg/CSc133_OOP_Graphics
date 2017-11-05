@@ -1,6 +1,8 @@
 package com.mycompany.a3;
 
+import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
+import com.codename1.ui.Graphics;
 
 
 /*
@@ -52,7 +54,7 @@ Astronaut extends Opponent
     private void
     updateColor(int r, int g, int b)
     {
-        setColor(r, g - FADE_GREEN, b);   
+        setColor(r, g + FADE_GREEN, b);   
     }
 
     /* GameWorld.fight() calls this method with which
@@ -86,4 +88,16 @@ Astronaut extends Opponent
         if (health != 0)
             super.move();
     }
+
+    public void
+    draw(Graphics g, Point pCmpRelPrnt)
+    {
+        int x = (int) (pCmpRelPrnt.getX() + getX());
+        int y =  (int) (pCmpRelPrnt.getY() + getY());
+        int base = getSize();
+//        g.drawRect(x, y, getSize(), getSize());
+        g.setColor(getColor());
+        g.fillTriangle(x+base/2, y+base/2, x, y-base, x+base, y-base);
+    }
+
 }

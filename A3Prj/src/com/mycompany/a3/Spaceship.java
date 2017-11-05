@@ -1,5 +1,7 @@
 package com.mycompany.a3;
 
+import com.codename1.charts.models.Point;
+import com.codename1.ui.Graphics;
 
 /*
  * Spaceship is a concrete subclass of Rescuer. Its purpose is to
@@ -99,4 +101,14 @@ Spaceship extends Rescuer
             doorCanExpand = false;
         return doorCanExpand;
     }
+
+    public void
+    draw(Graphics g, Point pCmpRelPrnt)
+    {
+        int x = (int) (pCmpRelPrnt.getX() + getX());
+        int y =  (int) (pCmpRelPrnt.getY() + getY());
+        g.setColor(getColor());
+        g.fillRect(x, y, getSize(), getSize());
+    }
+
 }
