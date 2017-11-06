@@ -12,12 +12,13 @@ import com.codename1.ui.Graphics;
 public class
 Spaceship extends Rescuer
 {
-    private static final int HINT_OF_RED = 15,
-                             DARK_GREEN = 128,
-                             HINT_OF_BLUE = 30,
-                             DOOR_RESIZE = 10,
-                             DOOR_MINIMUM_SIZE = 50,
-                             DOOR_MAXIMUM_SIZE = 1024;
+    private static final int
+        HINT_OF_RED = 15,
+        HINT_OF_GREEN = 15,
+        MEDIUM_BLUE = 128,
+        DOOR_RESIZE = 10,
+        DOOR_MINIMUM_SIZE = 50,
+        DOOR_MAXIMUM_SIZE = 1024;
     private boolean doorState;
     private static Spaceship spaceship;
     
@@ -27,7 +28,7 @@ Spaceship extends Rescuer
         super();
         setSize(100);
         this.doorState = false;
-        super.setColor(HINT_OF_RED, DARK_GREEN, HINT_OF_BLUE);
+        super.setColor(HINT_OF_RED, HINT_OF_GREEN, MEDIUM_BLUE);
     }
     
     public static Spaceship
@@ -105,10 +106,13 @@ Spaceship extends Rescuer
     public void
     draw(Graphics g, Point pCmpRelPrnt)
     {
-        int x = (int) (pCmpRelPrnt.getX() + getX());
-        int y =  (int) (pCmpRelPrnt.getY() + getY());
+        int width = getSize();
+        int xCenter = (int) (pCmpRelPrnt.getX() + getX());
+        int yCenter = (int) (pCmpRelPrnt.getY() + getY());
+        int xOrigin = xCenter - width/2;
+        int yOrigin = yCenter + width/2;
         g.setColor(getColor());
-        g.fillRect(x, y, getSize(), getSize());
+        g.fillRect(xOrigin, yOrigin, width, width);
     }
 
 }
