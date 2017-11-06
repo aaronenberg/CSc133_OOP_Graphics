@@ -3,60 +3,62 @@ package com.mycompany.a3;
 import com.codename1.ui.CheckBox;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
-import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.plaf.Border;
+import com.codename1.ui.util.UITimer;
+import java.lang.Runnable;
 
 
 /*
  * Game is the controller which enforces rules as to what
  * commands a user can issue while playing the game.
- * It instantiates a GameWorld and calls its init() to
- * populate the game with GameObjects. Also responsible
+ * It instantiates a GameWorld and calls its initLocationsOnMap() to
+ * populate the map with GameObjects. Also responsible
  * for prompting the user for input and taking certain actions
  * based on that input. Most of these actions are calls to
  * GameWorld methods. When there are no more astronauts remaining,
  * the game ends.
  */
 public class
-Game extends Form
+Game extends Form implements Runnable
 {
     private GameWorld      gameWorld = new GameWorld();
     private ScoreView      scoreView;
     private static MapView mapView;
     private int            mapHeight;
     private int            mapWidth;
+    private static final int elapsedMilliSecs = 20;
 
-    private static int eKeyCode = 101,
-                         cKeyCode =  99,
-                         sKeyCode = 115,
-                         rKeyCode = 114,
-                         lKeyCode = 108,
-                         uKeyCode = 117,
-                         dKeyCode = 100,
-                         oKeyCode = 111,
-                         aKeyCode =  97,
-                         wKeyCode = 119,
-                         fKeyCode = 102,
-                         tKeyCode = 116,
-                         xKeyCode = 120;
+    private static int 
+            eKeyCode = 101,
+            cKeyCode =  99,
+            sKeyCode = 115,
+            rKeyCode = 114,
+            lKeyCode = 108,
+            uKeyCode = 117,
+            dKeyCode = 100,
+            oKeyCode = 111,
+            aKeyCode =  97,
+            wKeyCode = 119,
+            fKeyCode = 102,
+            xKeyCode = 120;
 
-    private Button expandDoorButton           = new Button(),
-                    upButton                   = new Button(),
-                    leftButton                 = new Button(),
-                    spaceshipToAstronautButton = new Button(),
-                    contractDoorButton         = new Button(),
-                    downButton                 = new Button(),
-                    rightButton                = new Button(),
-                    spaceshipToAlienButton     = new Button(),
-                    rescueButton               = new Button(),
-                    newAlienButton             = new Button(),
-                    fightButton                = new Button(),
-                    tickButton                 = new Button();
+    private Button 
+            expandDoorButton           = new Button(),
+            upButton                   = new Button(),
+            leftButton                 = new Button(),
+            spaceshipToAstronautButton = new Button(),
+            contractDoorButton         = new Button(),
+            downButton                 = new Button(),
+            rightButton                = new Button(),
+            spaceshipToAlienButton     = new Button(),
+            rescueButton               = new Button(),
+            newAlienButton             = new Button(),
+            fightButton                = new Button();
 
     private ExpandDoorCommand           expandDoorCommand           = new ExpandDoorCommand(gameWorld);
     private MoveSpaceshipUpCommand      moveSpaceshipUpCommand      = new MoveSpaceshipUpCommand(gameWorld);
@@ -69,7 +71,6 @@ Game extends Form
     private RescueCommand               rescueCommand               = new RescueCommand(gameWorld);
     private NewAlienCommand             newAlienCommand             = new NewAlienCommand(gameWorld);
     private FightCommand                fightCommand                = new FightCommand(gameWorld);
-    private TickCommand                 tickCommand                 = new TickCommand(gameWorld);
     private ToggleSoundCommand          toggleSound                 = new ToggleSoundCommand(gameWorld);
     private ExitCommand                 exitCommand                 = new ExitCommand();
     private HelpCommand                 helpCommand                 = new HelpCommand();
@@ -82,6 +83,7 @@ Game extends Form
     private Container controlSouth;
 
     private Toolbar toolbar;
+    private UITimer timer;
 
     public
     Game()
@@ -91,6 +93,8 @@ Game extends Form
         mapView = new MapView();
         gameWorld.addObserver(scoreView);
         gameWorld.addObserver(mapView);
+
+        timer = new UITimer(this);
 
         toolbar = new Toolbar();
         this.setToolbar(toolbar);
@@ -109,7 +113,6 @@ Game extends Form
         this.addKeyListener(aKeyCode, spaceshipToAlienCommand);
         this.addKeyListener(wKeyCode, newAlienCommand);
         this.addKeyListener(fKeyCode, fightCommand);
-        this.addKeyListener(tKeyCode, tickCommand);
         this.addKeyListener(xKeyCode, exitCommand);
 
         expandDoorButton.setCommand(expandDoorCommand);
@@ -123,7 +126,6 @@ Game extends Form
         rescueButton.setCommand(rescueCommand);
         newAlienButton.setCommand(newAlienCommand);
         fightButton.setCommand(fightCommand);
-        tickButton.setCommand(tickCommand);
         sideMenuCheckBox.setCommand(toggleSound);
 
         controlWest = new Container(new BoxLayout(BoxLayout.Y_AXIS));
@@ -162,7 +164,6 @@ Game extends Form
 
         controlSouth.add(newAlienButton);
         controlSouth.add(fightButton);
-        controlSouth.add(tickButton);
 
         toolbar.getAllStyles().setPaddingTop(40);
         toolbar.setTitle("Space Fights Game");
@@ -197,6 +198,7 @@ Game extends Form
         System.out.println("''''''''''''''''''''''''''''''''''''''" +
                            "''''''''''''''''''''''''''''''''''''''\n");
 
+        timer.schedule(elapsedMilliSecs, true, this);
     }
 
     public static int
@@ -211,4 +213,9 @@ Game extends Form
         return mapView.getWidth();
     }
 
+    public void
+    run()
+    {
+        gameWorld.tick(elapsedMilliSecs);
+    }
 }

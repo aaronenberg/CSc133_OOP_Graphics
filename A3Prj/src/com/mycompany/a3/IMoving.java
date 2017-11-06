@@ -10,5 +10,5 @@ public interface
 IMoving
 {
     public void
-    move();
+    move(int time);
 }

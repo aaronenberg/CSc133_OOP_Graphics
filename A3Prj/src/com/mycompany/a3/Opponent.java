@@ -54,7 +54,7 @@ Opponent extends GameObject implements IMoving
     skewDirection()
     {
         random = new Random();
-        int smallRandomDegree = random.nextInt(SMALL_DEGREE) + 3;
+        int smallRandomDegree = random.nextInt(SMALL_DEGREE) + 15;
         if (smallRandomDegree % 2 == 0)
         {
             if (direction < (DIRECTION_ANGLE_DEGREES - smallRandomDegree))
@@ -62,14 +62,15 @@ Opponent extends GameObject implements IMoving
             else
                 direction -= smallRandomDegree;
         }
-        else
+        else if (smallRandomDegree % 3 == 0)
         {
             if (direction > (smallRandomDegree))
                 direction -= smallRandomDegree;
             else
                 direction += smallRandomDegree;
         }
-            
+        else
+            return;
     }
     
     public int
@@ -127,16 +128,19 @@ Opponent extends GameObject implements IMoving
     }
 
     public void
-    move()
+    move(int elapsedMilliSecs)
     {
         if (centerHitEdge())
             changeDirection();
-        double deltaX = Math.cos(theta()) * speed;
-        double deltaY = Math.sin(theta()) * speed;
-        float x = (float) Math.round((getX() + deltaX));
-        float y = (float) Math.round((getY() + deltaY));
-        this.setLocation(x, y);
-        this.skewDirection();
+        else
+            skewDirection();
+        double distanceTravelled = speed * (elapsedMilliSecs/1000.0);
+        double deltaX = Math.cos(theta()) * distanceTravelled;
+        double deltaY = Math.sin(theta()) * distanceTravelled;
+        float x = (float) (getX() + deltaX);
+        float y = (float) (getY() + deltaY);
+        setLocation(x, y);
+
     }
 
     public int
@@ -169,8 +173,8 @@ Opponent extends GameObject implements IMoving
         float x = getX();
         float y = getY();
         if (
-                (x > (WORLD_ORIGIN + speed) && x < (Game.getMapWidth() - speed)) &&
-                (y > (WORLD_ORIGIN + speed) && y < (Game.getMapHeight() - speed))
+                (x > (WORLD_ORIGIN) && x < (Game.getMapWidth())) &&
+                (y > (WORLD_ORIGIN) && y < (Game.getMapHeight()))
             )
             return centerHitEdge = false;
         return centerHitEdge;

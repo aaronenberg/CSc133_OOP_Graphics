@@ -200,7 +200,7 @@ GameWorld extends Observable
     }
 
     public void
-    tick()
+    tick(int elapsedMilliSecs)
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
         boolean opponentsMoved = false;
@@ -211,10 +211,11 @@ GameWorld extends Observable
 
             if (gameObject instanceof IMoving) {
                 IMoving movingGameObject = (IMoving) gameObject;
-                movingGameObject.move();
+                movingGameObject.move(elapsedMilliSecs);
                 opponentsMoved = true;
             }
         }
+
         if (opponentsMoved) {
             setChanged();
             notifyObservers();
