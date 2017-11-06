@@ -20,13 +20,16 @@ MapView extends Container implements Observer
         repaint();
         System.out.println();
     }
+
     @Override
     public void
     paint(Graphics g)
     {
         super.paint(g);
+
         IIterator gameObjects = gw.getGameObjectCollection().getIterator();
         mapOriginRelPrnt = new Point(getX(), getY());
+
         while (gameObjects.hasNext()) {
             GameObject gameObject = gameObjects.getNext();
             gameObject.draw(g, mapOriginRelPrnt);
