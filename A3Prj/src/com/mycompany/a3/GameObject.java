@@ -3,7 +3,7 @@ package com.mycompany.a3;
 
 import com.codename1.charts.models.Point;
 import com.codename1.charts.util.ColorUtil;
-
+import java.lang.Math;
 /*
  * GameObject is an abstract class which defines the behaviors and
  * characteristics common between all Opponents and Rescuers including:
@@ -76,8 +76,8 @@ GameObject implements IDrawable
     public String
     toString()
     {
-        String gameObjectStats = "loc=" + getX() + ","
-                                        + getY() +
+        String gameObjectStats = "loc=" + Math.round(getX() * 100.0)/100.0 + ","
+                                        + Math.round(getY() * 100.0)/100.0 +
                                  " color=[" + ColorUtil.red(color) + ","
                                             + ColorUtil.green(color) + ","
                                             + ColorUtil.blue(color) + "]" +
