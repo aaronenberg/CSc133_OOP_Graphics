@@ -11,16 +11,17 @@ import com.codename1.ui.Graphics;
 public class
 Alien extends Opponent
 {
-    private static final int SPEED_MULTIPLIER = 5,
-                             HINT_OF_GREEN    = 15,
-                             DARK_BLUE        = 128,
-                             ZERO_RED         = 0;
+    private static final int
+            SPEED_MULTIPLIER = 100,
+            MEDIUM_GREEN = 128,
+            HINT_OF_BLUE = 15,
+            HINT_OF_RED = 15;
     public
     Alien()
     {
         super();
         super.setSpeed(SPEED_MULTIPLIER);
-        super.setColor(ZERO_RED, HINT_OF_GREEN, DARK_BLUE);
+        super.setColor(HINT_OF_RED, MEDIUM_GREEN, HINT_OF_BLUE);
     }
     
     public
@@ -36,6 +37,7 @@ Alien extends Opponent
     setColor(int r, int g, int b) 
     {}
 
+    @Override
     public void
     setSpeed(int spd)
     {}
@@ -43,14 +45,16 @@ Alien extends Opponent
     public void
     draw(Graphics g, Point pCmpRelPrnt)
     {
-        int x = (int) (pCmpRelPrnt.getX() + getX());
-        int y =  (int) (pCmpRelPrnt.getY() + getY());
         int diameter = getSize();
-//        g.drawArc(x, y, diameter, diameter , 0, 360);
+        int xCenter = (int) (pCmpRelPrnt.getX() + getX());
+        int yCenter = (int) (pCmpRelPrnt.getY() + getY());
+        int xOrigin = xCenter - diameter/2;
+        int yOrigin = yCenter + diameter/2;
         g.setColor(getColor());
-        g.fillArc(x, y, diameter, diameter, 0, 360);
+        g.fillArc(xOrigin, yOrigin, diameter, diameter, 0, 360);
     }
-    
+
+    @Override
     public String
     toString()
     {
