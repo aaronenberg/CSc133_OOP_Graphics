@@ -16,18 +16,18 @@ Spaceship extends Rescuer
         HINT_OF_RED = 15,
         HINT_OF_GREEN = 15,
         MEDIUM_BLUE = 128,
-        DOOR_RESIZE = 10,
         DOOR_MINIMUM_SIZE = 50,
-        DOOR_MAXIMUM_SIZE = 1024;
-    private boolean doorState;
+        DOOR_MAXIMUM_SIZE = 1024,
+        INIT_SIZE = 100,
+        RESIZE = 22;
+    private boolean doorOpen;
     private static Spaceship spaceship;
     
     private
     Spaceship()
     {
-        super();
-        setSize(100);
-        this.doorState = false;
+        super(INIT_SIZE);
+        doorOpen = false;
         super.setColor(HINT_OF_RED, HINT_OF_GREEN, MEDIUM_BLUE);
     }
     
@@ -42,77 +42,63 @@ Spaceship extends Rescuer
     public void
     setColor()
     {}
-    
-    public void
-    openDoor()
-    {
-        this.doorState = true;
-    }
-    
-    public void
-    closeDoor()
-    {
-        this.doorState = false;
-    }
-    
+
     /*
      * the door expands by 10 until its size is >= 1015
      * after this point, the door expands by 1 
      * to keep it from breaking passed 1024
      */
-    public void
-    expandDoor()
-    {
-        int doorSize = getSize();
-        if (doorSize < 1020 && (doorSize + DOOR_RESIZE) <= DOOR_MAXIMUM_SIZE)
-            setSize(doorSize + DOOR_RESIZE);
-        else if ((doorSize >= (DOOR_MAXIMUM_SIZE - DOOR_RESIZE)) && (doorSize < DOOR_MAXIMUM_SIZE)) 
-            setSize(++doorSize);
-    }
     
-    public void
-    contractDoor()
+    public boolean
+    resizeDoor(int keyCode)
     {
-        if (doorCanContract()) {
-            int doorSize = getSize();
-            setSize(doorSize - DOOR_RESIZE);
+        int doorSize = getSize(); 
+        if (doorCanContract() && (keyCode == ContractDoorCommand.getKeyCode())) {
+            setSize(doorSize - RESIZE);
+            return true;
         }
+        else if (doorCanExpand() && (keyCode == ExpandDoorCommand.getKeyCode())) {
+            setSize(doorSize + RESIZE);
+            return true;
+        }
+        return false;
+    }
+
+    public void
+    openDoor()
+    {
+        doorOpen = true;
+    }
+
+    public void
+    closeDoor()
+    {
+        doorOpen = false;
     }
     
     public boolean
     doorCanContract()
     {
-        boolean doorCanContract;
-        int doorSize = getSize();
-        if (doorSize > DOOR_MINIMUM_SIZE)
-            doorCanContract = true;
-        else
-            doorCanContract = false;
-        return doorCanContract;
+        return ((getSize() - RESIZE) >= DOOR_MINIMUM_SIZE);
+
     }
     
     public boolean
     doorCanExpand()
     {
-        boolean doorCanExpand;
-        int doorSize = getSize();
-        if (doorSize < DOOR_MAXIMUM_SIZE)
-            doorCanExpand = true;
-        else
-            doorCanExpand = false;
-        return doorCanExpand;
+        return ((getSize() + RESIZE) <= DOOR_MAXIMUM_SIZE);
     }
 
     public void
     draw(Graphics g, Point pCmpRelPrnt)
     {
         int width = getSize();
-        int xCenter = (int) (pCmpRelPrnt.getX() + getX());
-        int yCenter = (int) (pCmpRelPrnt.getY() + getY());
-        int xOrigin = xCenter - width/2;
-        int yOrigin = yCenter + width/2;
+        int xOrigin = (int) (pCmpRelPrnt.getX() + getX());
+        int yOrigin = (int) (pCmpRelPrnt.getY() + getY());
+        int xCenter = xOrigin - width/2;
+        int yCenter = yOrigin - width/2;
         g.setColor(getColor());
-        g.fillRect(xOrigin, yOrigin, width, width);
+        g.fillRect(xCenter, yCenter, width, width);
     }
 
 }

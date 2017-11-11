@@ -1,6 +1,7 @@
 package com.mycompany.a3;
 
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
 
@@ -16,28 +17,30 @@ import java.lang.Math;
  */
 
 public abstract class
-Opponent extends GameObject implements IMoving
+Opponent extends GameObject implements IMoving, ICollider
 {
     private static final float WORLD_ORIGIN = (float) 0.0;
-    private static final int   MIN_OPP_SIZE = 20,
-                               MAX_OPP_SIZE = 50,
-                               DIRECTION_ANGLE_DEGREES = 359,
-                               COMPASS_ANGLE_OFFSET = 90,
-                               SPEED_CONSTANT = 1,
-                               SMALL_DEGREE = 3;
-    private int speed = SPEED_CONSTANT,
-                direction;
-    private Random random,
-                   randomDegree,
-                   randomSize;
-    
+    private static final int
+            MIN_SIZE = 40,
+            MAX_SIZE = 60,
+            MAX_DIRECTION_DEGREES = 359,
+            COMPASS_ANGLE_OFFSET = 90,
+            SPEED_CONSTANT = 1;
+    private int
+            speed = SPEED_CONSTANT,
+            direction;
+    private Random
+            random,
+            randomDegree,
+            randomSize;
+    private ArrayList<ICollider> collisions = new ArrayList<ICollider>();
     
     public
     Opponent()
     {
         super();
-        direction = randomizeDirection();
-        super.setSize(randomizeSize());
+        direction = randomDirection();
+        super.setSize(randomSize());
     }
 
     @Override
@@ -46,25 +49,27 @@ Opponent extends GameObject implements IMoving
     {}
     
     /*
-     * randomly pick a number between 3 and 6 (inclusive),
+     * randomly pick a number between 3 and 18 (inclusive),
      * depending on if its odd or even, direction increases or decreases
-     * by that amount provided it keeps us within limits of direction
+     * by that amount which is within acceptable limits of direction
      */
     private void
     skewDirection()
     {
+        final int SMALL_DEGREE = 3;
         random = new Random();
         int smallRandomDegree = random.nextInt(SMALL_DEGREE) + 15;
+
         if (smallRandomDegree % 2 == 0)
         {
-            if (direction < (DIRECTION_ANGLE_DEGREES - smallRandomDegree))
+            if ((direction + smallRandomDegree) <= MAX_DIRECTION_DEGREES)
                 direction += smallRandomDegree;
             else
                 direction -= smallRandomDegree;
         }
         else if (smallRandomDegree % 3 == 0)
         {
-            if (direction > (smallRandomDegree))
+            if (direction >= (smallRandomDegree))
                 direction -= smallRandomDegree;
             else
                 direction += smallRandomDegree;
@@ -96,21 +101,21 @@ Opponent extends GameObject implements IMoving
     }
  
     /*
-     * We subtract MIN_OPP_SIZE from MAX_OPP_SIZE to stay within upper bound
-     * after adding MIN_OPP_SIZE to raise the lower bound.
+     * We subtract MIN_OPP_SIZE from MAX_OPP_SIZE to stay within
+     * upper bound after adding MIN_OPP_SIZE to raise the lower bound.
      */
     private int
-    randomizeSize()
+    randomSize()
     {
         randomSize = new Random();
-        return randomSize.nextInt(MAX_OPP_SIZE - MIN_OPP_SIZE) + MIN_OPP_SIZE;
+        return randomSize.nextInt(MAX_SIZE - MIN_SIZE) + MIN_SIZE;
     }
 
     private int
-    randomizeDirection()
+    randomDirection()
     {
         randomDegree = new Random();
-        return randomDegree.nextInt(DIRECTION_ANGLE_DEGREES);
+        return randomDegree.nextInt(MAX_DIRECTION_DEGREES);
     }
     
     /*
@@ -122,9 +127,9 @@ Opponent extends GameObject implements IMoving
     private double
     theta()
     {
-        double compassAngleInDegrees = (double)(COMPASS_ANGLE_OFFSET - direction);
-        double compassAngleInRadians = Math.toRadians(compassAngleInDegrees);
-        return compassAngleInRadians;
+        double compassAngleDegrees = (double)(COMPASS_ANGLE_OFFSET - direction);
+        double compassAngleRadians = Math.toRadians(compassAngleDegrees);
+        return compassAngleRadians;
     }
 
     public void
@@ -134,11 +139,13 @@ Opponent extends GameObject implements IMoving
             changeDirection();
         else
             skewDirection();
-        double distanceTravelled = speed * (elapsedMilliSecs/1000.0);
+
+        double distanceTravelled = speed * (elapsedMilliSecs / 1000.0);
         double deltaX = Math.cos(theta()) * distanceTravelled;
         double deltaY = Math.sin(theta()) * distanceTravelled;
         float x = (float) (getX() + deltaX);
         float y = (float) (getY() + deltaY);
+
         setLocation(x, y);
 
     }
@@ -172,11 +179,13 @@ Opponent extends GameObject implements IMoving
         boolean centerHitEdge = true;
         float x = getX();
         float y = getY();
+
         if (
                 (x > (WORLD_ORIGIN) && x < (Game.getMapWidth())) &&
                 (y > (WORLD_ORIGIN) && y < (Game.getMapHeight()))
             )
             return centerHitEdge = false;
+
         return centerHitEdge;
     }
 
@@ -184,55 +193,96 @@ Opponent extends GameObject implements IMoving
     xAtMaxWidth()
     {
         boolean xAtMaxWidth = false;
-        if (centerHitEdge())
-        {
+
+        if (centerHitEdge()) {
             float x = getX();
+
             if (x >= Game.getMapWidth())
                 xAtMaxWidth = true;
         }
         return xAtMaxWidth;
     }
+
     public boolean
     yAtMaxHeight()
     {
         boolean yAtMaxHeight = false;
-        if (centerHitEdge())
-        {
+
+        if (centerHitEdge()) {
             float y = getY();
+
             if (y >= Game.getMapHeight())
                 yAtMaxHeight = true;
         }
         return yAtMaxHeight;
     }
+
     public boolean
-    yAtOriginHeight()
+    yAtOrigin()
     {
         boolean yAtOriginHeight = false;
-        if (centerHitEdge())
-        {
+
+        if (centerHitEdge()) {
             float y = getY();
+
             if (y <= WORLD_ORIGIN)
                 yAtOriginHeight = true;
         }
         return yAtOriginHeight;
     }
+
     public boolean
-    xAtOriginWidth()
+    xAtOrigin()
     {
         boolean xAtOriginWidth = false;
-        if (centerHitEdge())
-        {
+
+        if (centerHitEdge()) {
             float y = getY();
+
             if (y <= WORLD_ORIGIN)
                 xAtOriginWidth = true;
         }
         return xAtOriginWidth;
     }
-    
+
+    public boolean
+    collidesWith(ICollider opponent)
+    {
+        boolean result = false;
+        float halfSize = getSize()/2.0f;
+        float halfSizeOpp = ((GameObject) opponent).getSize()/2.0f;
+        float xCenter = getX() + halfSize;
+        float yCenter = getY() + halfSize;
+        float xCenterOpp =  ((GameObject) opponent).getX() + halfSizeOpp;
+        float yCenterOpp =  ((GameObject) opponent).getY() + halfSizeOpp;
+        float dx = xCenter - xCenterOpp;
+        float dy = yCenter - yCenterOpp;
+        float distanceBetweenCentersSqrd = (dx*dx + dy*dy);
+        float radiiSqrd = (      halfSize * halfSize
+                            + 2 * halfSize * halfSizeOpp
+                            +  halfSizeOpp * halfSizeOpp );
+
+        if (distanceBetweenCentersSqrd <= radiiSqrd)
+            result = true;
+        else {
+            collisions.remove(opponent);
+            ((Opponent) opponent).getCollisions().remove(this);
+        }
+        return result;
+    }
+
+    public ArrayList<ICollider>
+    getCollisions()
+    {
+        return collisions;
+    }
+
+    @Override
     public String
     toString()
     {
         String GameObjString = super.toString();
         return GameObjString + " speed=" + speed + " dir=" + direction;
     }
+
 }

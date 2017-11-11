@@ -16,6 +16,10 @@ Rescuer extends GameObject implements IGuided
     {
         super();
     }
+
+    public Rescuer(int size) {
+        super(size);
+    }
     
     public void
     moveLeft()

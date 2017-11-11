@@ -22,17 +22,24 @@ import java.util.Random;
 public class
 GameWorld extends Observable
 {
-    private static final int INIT_ALIENS           = 3,
-                                INIT_ASTRONAUTS      = 4,
-                                ALIEN_BREACH_PENALTY = 10;
-    private int astronautsRescued   = 0,
-                 astronautsRemaining = INIT_ASTRONAUTS,
-                 aliensSnuckIn       = 0,
-                 aliensRemaining     = INIT_ALIENS,
-                 totalScore          = 0;
-    private boolean soundOn        = false;
+    private static final int
+        INIT_ALIENS = 10,
+        INIT_ASTRONAUTS = 4,
+        ALIEN_BREACH_PENALTY = 10;
+    private static int
+        astronautsRescued = 0,
+        astronautsRemaining = INIT_ASTRONAUTS,
+        aliensSnuckIn = 0,
+        aliensRemaining = INIT_ALIENS,
+        totalScore = 0;
+    private static BGSound bgSound = new BGSound("BGSound.wav");
+    private static Sound alienAstronautCollisionSound = new Sound("AlienAstronautCollision.wav");
+    private static Sound alienSpawnedSound = new Sound("AlienSpawned.wav");
+    private static Sound spaceshipDoorOpensSound = new Sound("SpaceshipDoorOpens.wav");
+    
+    private static boolean soundOn = false;
     private Spaceship spaceship;
-    private GameObjectCollection gameObjectCollection;
+    private static GameObjectCollection gameObjectCollection;
 
     public void
     init()
@@ -53,27 +60,14 @@ GameWorld extends Observable
     }
 
     public boolean
-    expandSpaceshipDoor()
+    resizeSpaceshipDoor(int keyCode)
     {
-        boolean doorExpandable = spaceship.doorCanExpand();
-        if (doorExpandable) {
-            spaceship.expandDoor();
+        if (spaceship.resizeDoor(keyCode)) {
             setChanged();
             notifyObservers();
+            return true;
         }
-        return doorExpandable;
-    }
-
-    public boolean
-    contractSpaceshipDoor()
-    {
-        boolean doorContractable = spaceship.doorCanContract();
-        if (doorContractable) {
-            spaceship.contractDoor();
-            setChanged();
-            notifyObservers();
-        }
-        return doorContractable;
+        return false;
     }
 
     public void
@@ -126,13 +120,12 @@ GameWorld extends Observable
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
         boolean aboardShip = false;
-
+        
         while (gameObjects.hasNext()) {
             GameObject gameObject = gameObjects.getNext();
+            playSound(gameObject, spaceship);
 
-            if (gameObject instanceof Opponent
-                && opponentAtDoor((Opponent) gameObject) != null)
-            {
+            if ((gameObject instanceof Opponent) && (opponentAtDoor((Opponent) gameObject) != null)) {
                 aboardShip = true;
                 updateScore((Opponent) gameObject);
                 gameObjects.remove();
@@ -188,7 +181,7 @@ GameWorld extends Observable
         return notFound;
     }
 
-    public void
+    public static void
     map()
     {
         IIterator gameObjects = gameObjectCollection.getIterator();
@@ -215,33 +208,35 @@ GameWorld extends Observable
                 opponentsMoved = true;
             }
         }
-
         if (opponentsMoved) {
             setChanged();
             notifyObservers();
         }
     }
 
-    public int
-    getAliensRemaining()
+    public static void
+    aliensCollide(Alien alien1, ICollider alien2)
     {
-        return aliensRemaining;
-    }
-
-    public int
-    getAstronautsRemaining()
-    {
-        return astronautsRemaining;
-    }
-
-    public void
-    aliensCollide()
-    {
-        if (getAliensRemaining() >= 2) {
-            gameObjectCollection.add(nearbyAlien());
+        if (aliensRemaining >= 2 && aliensRemaining < 30) {
+            playSound(alien1, (GameObject) alien2);
+            Alien spawnedAlien = nearbyAlien(alien1);
+            gameObjectCollection.add(spawnedAlien);
+            alien1.getCollisions().add(spawnedAlien);
+            ((Opponent) alien2).getCollisions().add(spawnedAlien);
             aliensRemaining++;
-            setChanged();
-            notifyObservers();
+        }
+    }
+
+    public static void
+    playSound(GameObject opponent1, GameObject opponent2)
+    {
+        if (soundOn) {
+            if (opponent2 instanceof Spaceship)
+                spaceshipDoorOpensSound.play();
+            else if (!(opponent1 instanceof Alien && opponent2 instanceof Alien))
+                alienAstronautCollisionSound.play();
+            else
+                alienSpawnedSound.play();
         }
     }
 
@@ -252,22 +247,22 @@ GameWorld extends Observable
      * does not spawn outside of the GameWorld limits and
      * still within close proximity to our randomly selected alien
      */
-    private Alien
-    nearbyAlien()
+    private static Alien
+    nearbyAlien(Alien alien1)
     {
         float nearbyX;
         float nearbyY;
-        Alien randomRemainingAlien = gameObjectCollection.getRandomRemainingAlien();
+        int size = alien1.getSize();
 
-        if (randomRemainingAlien.xAtMaxWidth())
-            nearbyX = randomRemainingAlien.getX() - 2;
+        if (alien1.xAtMaxWidth())
+            nearbyX = alien1.getX() - size;
         else
-            nearbyX = randomRemainingAlien.getX() + 2;
+            nearbyX = alien1.getX() + size;
 
-        if (randomRemainingAlien.yAtMaxHeight())
-            nearbyY = randomRemainingAlien.getY() - 2;
+        if (alien1.yAtMaxHeight())
+            nearbyY = alien1.getY() - size;
         else
-            nearbyY = randomRemainingAlien.getY() + 2;
+            nearbyY = alien1.getY() + size;
 
         Alien spawnedAlien = new Alien(nearbyX, nearbyY);
 
@@ -275,37 +270,67 @@ GameWorld extends Observable
     }
 
     public boolean
-    fight()
+    checkForAndHandleCollisions()
     {
-        if (aliensRemaining > 0 && astronautsRemaining > 0) {
-            Astronaut randomAstronaut;
-            randomAstronaut = gameObjectCollection.getRandomRemainingAstronaut();
-            randomAstronaut.collidesWithAlien();
-            setChanged();
-            notifyObservers();
-            return true;
+        IIterator gameObjects1 = gameObjectCollection.getIterator();
+        
+        while (gameObjects1.hasNext()) {
+            GameObject gameObject1 = gameObjects1.getNext();
+
+            if (gameObject1 instanceof ICollider) {
+                IIterator gameObjects2 = gameObjectCollection.getIterator();
+                
+                
+                while (gameObjects2.hasNext()) {
+                    GameObject gameObject2 = gameObjects2.getNext();
+                    
+                    if ( (gameObject2 instanceof ICollider) && (gameObject2 != gameObject1) ) {
+                        ICollider collider1 = (ICollider) gameObject1;
+                        ICollider collider2 = (ICollider) gameObject2;
+
+                        if ( collider1.collidesWith(collider2) ) {
+                            collider1.handleCollision(collider2);
+                            setChanged();
+                            notifyObservers();
+                            return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }
 
-    public int
+    public static int
+    getAliensRemaining()
+    {
+        return aliensRemaining;
+    }
+
+    public static int
+    getAstronautsRemaining()
+    {
+        return astronautsRemaining;
+    }
+
+    public static int
     getAstronautsRescued()
     {
         return astronautsRescued;
     }
-    public int
+    public static int
     getAliensSnuckIn()
     {
         return aliensSnuckIn;
     }
 
-    public int
+    public static int
     getScore()
     {
         return totalScore;
     }
 
-    public boolean
+    public static boolean
     getSound()
     {
         return soundOn;
@@ -315,11 +340,15 @@ GameWorld extends Observable
     toggleSound()
     {
         soundOn = !soundOn;
+        if (soundOn)
+            bgSound.play();
+        else
+            bgSound.pause();
         setChanged();
         notifyObservers();
     }
 
-    public GameObjectCollection
+    public static GameObjectCollection
     getGameObjectCollection()
     {
         return gameObjectCollection;

@@ -7,22 +7,32 @@ public class
 ExpandDoorCommand extends Command
 {
     private GameWorld target;
+    private static int keyCode;
+
     public
-    ExpandDoorCommand(GameWorld gw)
+    ExpandDoorCommand(GameWorld gw, int code)
     {
         super("Expand");
         target = gw;
+        keyCode = code;
     }
-    
+
+    @Override
     public void
     actionPerformed(ActionEvent evt)
     {
-        if(target.expandSpaceshipDoor())
+        if (target.resizeSpaceshipDoor(keyCode))
           System.out.println("The spaceship door expands.\n");
-      else
+        else
           System.out.println("Spaceship's door is already expanded to maximum size.\n");
 
         System.out.println("''''''''''''''''''''''''''''''''''''''" +
-                "''''''''''''''''''''''''''''''''''''''\n");
+                            "''''''''''''''''''''''''''''''''''''''\n");
+    }
+
+    public static int
+    getKeyCode()
+    {
+        return keyCode;
     }
 }

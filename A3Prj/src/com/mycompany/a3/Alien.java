@@ -1,5 +1,7 @@
 package com.mycompany.a3;
 
+import java.util.ArrayList;
+
 import com.codename1.charts.models.Point;
 import com.codename1.ui.Graphics;
 
@@ -16,6 +18,7 @@ Alien extends Opponent
             MEDIUM_GREEN = 128,
             HINT_OF_BLUE = 15,
             HINT_OF_RED = 15;
+    
     public
     Alien()
     {
@@ -23,11 +26,15 @@ Alien extends Opponent
         super.setSpeed(SPEED_MULTIPLIER);
         super.setColor(HINT_OF_RED, MEDIUM_GREEN, HINT_OF_BLUE);
     }
-    
+
+    /*
+     * When two aliens collide, a new alien spawns near the
+     * point of collision.
+     */
     public
     Alien(float x, float y)
     {
-        this();
+        this(); // call the default constructor
         setLocation(x, y);
     }
 
@@ -46,12 +53,26 @@ Alien extends Opponent
     draw(Graphics g, Point pCmpRelPrnt)
     {
         int diameter = getSize();
-        int xCenter = (int) (pCmpRelPrnt.getX() + getX());
-        int yCenter = (int) (pCmpRelPrnt.getY() + getY());
-        int xOrigin = xCenter - diameter/2;
-        int yOrigin = yCenter + diameter/2;
+        int xOrigin = (int) (pCmpRelPrnt.getX() + getX());
+        int yOrigin = (int) (pCmpRelPrnt.getY() + getY());
+        int xCenter = xOrigin - diameter/2;
+        int yCenter = yOrigin - diameter/2;
+
         g.setColor(getColor());
-        g.fillArc(xOrigin, yOrigin, diameter, diameter, 0, 360);
+        g.fillArc(xCenter, yCenter, diameter, diameter, 0, 360);
+    }
+
+    public void
+    handleCollision(ICollider opponent)
+    {
+        ArrayList<ICollider> collisions = getCollisions();
+        ArrayList<ICollider> collisionsOpponent = ((Opponent) opponent).getCollisions();
+
+        if (opponent instanceof Alien && !collisions.contains(opponent)) {
+            GameWorld.aliensCollide(this, opponent);
+            collisions.add(opponent);
+            collisionsOpponent.add(this);
+        }  
     }
 
     @Override
@@ -61,5 +82,4 @@ Alien extends Opponent
         String opponentString = super.toString();
         return "    Alien: " + opponentString;
     }
-
 }
