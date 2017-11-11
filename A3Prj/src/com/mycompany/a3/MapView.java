@@ -15,8 +15,7 @@ MapView extends Container implements Observer
     public void
     update(Observable observable, Object data)
     {
-        gw = (GameWorld) observable;
-        gw.map();
+        GameWorld.map();
         repaint();
         System.out.println();
     }
@@ -27,7 +26,7 @@ MapView extends Container implements Observer
     {
         super.paint(g);
 
-        IIterator gameObjects = gw.getGameObjectCollection().getIterator();
+        IIterator gameObjects = GameWorld.getGameObjectCollection().getIterator();
         mapOriginRelPrnt = new Point(getX(), getY());
 
         while (gameObjects.hasNext()) {

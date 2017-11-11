@@ -12,18 +12,19 @@ import java.util.Observer;
 public class
 ScoreView extends Container implements Observer
 {
-    private Label totalScoreLabel          = new Label(),
-                  astronautsRescuedLabel   = new Label(),
-                  astronautsRemainingLabel = new Label(),
-                  aliensSnuckInLabel       = new Label(),
-                  aliensRemainingLabel     = new Label(),
-                  totalScoreValue          = new Label(),
-                  astronautsRescuedValue   = new Label(),
-                  astronautsRemainingValue = new Label(),
-                  aliensSnuckInValue       = new Label(),
-                  aliensRemainingValue     = new Label();
-    private static Label soundLabel        = new Label(),
-                         soundValue        = new Label();
+    private static Label 
+        totalScoreLabel          = new Label(),
+        astronautsRescuedLabel   = new Label(),
+        astronautsRemainingLabel = new Label(),
+        aliensSnuckInLabel       = new Label(),
+        aliensRemainingLabel     = new Label(),
+        totalScoreValue          = new Label(),
+        astronautsRescuedValue   = new Label(),
+        astronautsRemainingValue = new Label(),
+        aliensSnuckInValue       = new Label(),
+        aliensRemainingValue     = new Label(),
+        soundLabel               = new Label(),
+        soundValue               = new Label();
 
     public
     ScoreView()
@@ -59,21 +60,19 @@ ScoreView extends Container implements Observer
     public void
     update(Observable observable, Object arg)
     {
-        GameWorld gw = (GameWorld) observable;
+        totalScoreValue.setText(         " " + GameWorld.getScore());
+        astronautsRescuedValue.setText(  " " + GameWorld.getAstronautsRescued());
+        aliensSnuckInValue.setText(      " " + GameWorld.getAliensSnuckIn());
+        astronautsRemainingValue.setText(" " + GameWorld.getAstronautsRemaining());
+        aliensRemainingValue.setText(    " " + GameWorld.getAliensRemaining());
+        soundValue.setText(              " " + checkSoundStatus(GameWorld.getSound()));
 
-        totalScoreValue.setText(         " " + gw.getScore());
-        astronautsRescuedValue.setText(  " " + gw.getAstronautsRescued());
-        aliensSnuckInValue.setText(      " " + gw.getAliensSnuckIn());
-        astronautsRemainingValue.setText(" " + gw.getAstronautsRemaining());
-        aliensRemainingValue.setText(    " " + gw.getAliensRemaining());
-        soundValue.setText(              " " + checkSoundStatus(gw.getSound()));
+        repaint();
 
-        this.repaint();
-
-        if (gw.getAstronautsRemaining() == 0) {
+        if (GameWorld.getAstronautsRemaining() == 0) {
             System.out.println("All astronauts have been rescued! " +
                                "The spaceship flies back into space.\n");
-            System.out.println("Your final score: " + gw.getScore());
+            System.out.println("Your final score: " + GameWorld.getScore());
             System.out.println("\n''''''''''''''''''''''''''''''''''''''" +
                                "''''''''''''''''''''''''''''''''''''''\n");
             Display.getInstance().exitApplication();

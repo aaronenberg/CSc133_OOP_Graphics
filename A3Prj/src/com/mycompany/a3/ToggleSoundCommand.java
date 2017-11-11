@@ -5,6 +5,7 @@ import com.codename1.ui.Command;
 import com.codename1.ui.SideMenuBar;
 import com.codename1.ui.events.ActionEvent;
 
+@SuppressWarnings("deprecation")
 public class
 ToggleSoundCommand extends Command
 {
@@ -12,7 +13,7 @@ ToggleSoundCommand extends Command
     public
     ToggleSoundCommand(GameWorld gw)
     {
-        super("      Sound");
+        super("Sound");
         target = gw;
     }
     
