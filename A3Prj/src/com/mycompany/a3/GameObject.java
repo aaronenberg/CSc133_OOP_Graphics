@@ -17,6 +17,12 @@ GameObject implements IDrawable
                  color;
     private Point location = new Point();
 
+    public GameObject(){}
+
+    public GameObject(int newSize) {
+        this();
+        setSize(newSize);
+    }
     public int
     getColor() 
     {
@@ -72,7 +78,8 @@ GameObject implements IDrawable
         size = newSize;
     }
 
-    
+
+    @Override
     public String
     toString()
     {
