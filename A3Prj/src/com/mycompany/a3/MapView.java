@@ -27,11 +27,37 @@ MapView extends Container implements Observer
         super.paint(g);
 
         IIterator gameObjects = GameWorld.getGameObjectCollection().getIterator();
-        mapOriginRelPrnt = new Point(getX(), getY());
+        Point mapOriginRelPrnt = new Point(getX(), getY());
 
         while (gameObjects.hasNext()) {
             GameObject gameObject = gameObjects.getNext();
             gameObject.draw(g, mapOriginRelPrnt);
         }
     }
+
+    @Override
+    public void
+    pointerPressed(int x, int y)
+    {
+        float xRelPrntOrigin = x - getParent().getAbsoluteX();
+        float yRelPrntOrigin = y - getParent().getAbsoluteY();
+        Point pPtrRelPrnt = new Point(xRelPrntOrigin, yRelPrntOrigin);
+        Point mapOriginRelPrnt = new Point(getX(), getY());
+        IIterator gameObjects = GameWorld.getGameObjectCollection().getIterator();
+
+        while (gameObjects.hasNext()) {
+            GameObject gameObject = gameObjects.getNext();
+
+            if (gameObject instanceof ISelectable) {
+                ISelectable astronaut = (ISelectable) gameObject;
+
+                if (astronaut.contains(pPtrRelPrnt, mapOriginRelPrnt) && Game.gamePaused())
+                    astronaut.setSelected(true);
+                else
+                    astronaut.setSelected(false);                    
+            }
+        }
+        repaint();
+    }
+
 }

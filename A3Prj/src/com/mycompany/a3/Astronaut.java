@@ -17,7 +17,7 @@ import com.codename1.ui.Graphics;
  */
 
 public class
-Astronaut extends Opponent
+Astronaut extends Opponent implements ISelectable
 {
     private static final int
             INIT_HEALTH = 5,
@@ -28,6 +28,7 @@ Astronaut extends Opponent
             HINT_OF_GREEN = 15,
             MEDIUM_BLUE = 128;
     private int health;
+    private boolean isSelected = false;
 
     public
     Astronaut()
@@ -67,14 +68,26 @@ Astronaut extends Opponent
     public void
     draw(Graphics g, Point pCmpRelPrnt)
     {
-        int base = getSize();
-        int xOrigin = (int) (pCmpRelPrnt.getX() + getX());
-        int yOrigin = (int) (pCmpRelPrnt.getY() + getY());
-        int xCenter = xOrigin - base/2;
-        int yCenter = yOrigin - base/2;
+        final int no_of_vertices = 3;
+        int size = getSize();
+        Point top = new Point(getX(), getY() + size/2);
+        Point bottomLeft = new Point(getX() - size/2, getY() - size/2);
+        Point bottomRight = new Point(getX() + size/2, getY() - size/2);
+        int xTop = (int) (pCmpRelPrnt.getX() + top.getX());
+        int yTop = (int) (pCmpRelPrnt.getY() + top.getY());
+        int xBottomLeft = (int) (pCmpRelPrnt.getX() + bottomLeft.getX());
+        int yBottomLeft = (int) (pCmpRelPrnt.getY() + bottomLeft.getY());
+        int xBottomRight = (int) (pCmpRelPrnt.getX() + bottomRight.getX());
+        int yBottomRight = (int) (pCmpRelPrnt.getY() + bottomRight.getY());
+        int xPoints[] = {xTop, xBottomLeft, xBottomRight};
+        int yPoints[] = {yTop, yBottomLeft, yBottomRight};
 
         g.setColor(getColor());
-        g.fillTriangle(xCenter+base/2, yCenter+base/2, xCenter, yCenter-base, xCenter+base, yCenter-base);
+
+        if (isSelected())
+            g.drawPolygon(xPoints, yPoints, no_of_vertices);
+        else
+            g.fillPolygon(xPoints, yPoints, no_of_vertices);
     }
 
     @Override
@@ -106,6 +119,34 @@ Astronaut extends Opponent
             collisionsOpponent.add(this);
             GameWorld.playSound(this, (GameObject) opponent);
         }
+    }
+
+    public void
+    setSelected(boolean selectedState)
+    {
+        isSelected = selectedState;
+    }
+
+    public boolean
+    isSelected()
+    {
+        return isSelected;
+    }
+
+    public boolean
+    contains(Point pPtrRelPrnt, Point pCmpRelPrnt)
+    {
+        int size = getSize();
+        float pX = pPtrRelPrnt.getX();
+        float pY = pPtrRelPrnt.getY();
+        float xLoc = pCmpRelPrnt.getX() + getX();
+        float yLoc = pCmpRelPrnt.getY() + getY();
+
+        if ( (pX >= xLoc) && (pX <= xLoc + size)
+          && (pY >= yLoc) && (pY <= yLoc + size) )
+            return true;
+        else
+            return false;
     }
 
 }
