@@ -32,6 +32,7 @@ Game extends Form implements Runnable
         mapHeight,
         mapWidth;
     private static final int elapsedMilliSecs = 20;
+    private static boolean gamePaused = false;
 
     private static int 
         eKeyCode = 101,
@@ -54,9 +55,9 @@ Game extends Form implements Runnable
         downButton                 = new Button(),
         rightButton                = new Button(),
         spaceshipToAlienButton     = new Button(),
-        rescueButton               = new Button();
+        rescueButton               = new Button(),
 //            healButton                 = new Button(),
-//            pauseButton                = new Button();
+        gameModeButton             = new Button();
 
     private ExpandDoorCommand           expandDoorCommand           = new ExpandDoorCommand(gameWorld, eKeyCode);
     private MoveSpaceshipUpCommand      moveSpaceshipUpCommand      = new MoveSpaceshipUpCommand(gameWorld);
@@ -68,13 +69,13 @@ Game extends Form implements Runnable
     private SpaceshipToAlienCommand     spaceshipToAlienCommand     = new SpaceshipToAlienCommand(gameWorld);
     private RescueCommand               rescueCommand               = new RescueCommand(gameWorld);
 //    private HealCommand                 healCommand                 = new HealCommand(gameWorld);
-//    private PauseCommand                pauseCommand                = new PauseCommand(gameWorld);
+    private GameModeCommand             gameModeCommand             = new GameModeCommand(this);
     private ToggleSoundCommand          toggleSound                 = new ToggleSoundCommand(gameWorld);
     private ExitCommand                 exitCommand                 = new ExitCommand();
     private HelpCommand                 helpCommand                 = new HelpCommand();
     private AboutCommand                aboutCommand                = new AboutCommand();
 
-    private CheckBox sideMenuCheckBox = new CheckBox("Sound");
+    private CheckBox sideMenuCheckBox = new CheckBox();
 
     private Container
         controlWest,
@@ -122,7 +123,7 @@ Game extends Form implements Runnable
         spaceshipToAlienButton.setCommand(spaceshipToAlienCommand);
         rescueButton.setCommand(rescueCommand);
 //        healButton.setCommand(healCommand);
-//        pauseButton.setCommand(pauseCommand);
+        gameModeButton.setCommand(gameModeCommand);
         sideMenuCheckBox.setCommand(toggleSound);
 
         controlWest = new Container(new BoxLayout(BoxLayout.Y_AXIS));
@@ -160,7 +161,9 @@ Game extends Form implements Runnable
         controlEast.add(rescueButton);
 
 //        controlSouth.add(healButton);
-//        controlSouth.add(pauseButton);
+        gameModeButton.getAllStyles().setPaddingRight(20);
+        gameModeButton.getAllStyles().setPaddingLeft(20);
+        controlSouth.add(gameModeButton);
 
         toolbar.getAllStyles().setPaddingTop(40);
         toolbar.setTitle("Space Fights Game");
@@ -178,13 +181,14 @@ Game extends Form implements Runnable
         addComponent(BorderLayout.SOUTH, controlSouth);
         addComponent(BorderLayout.CENTER, mapView);
 
-        show();
         /*
          * container dimensions are set only after calling show()
          * so we query them here and set locations of each game object
          * randomly within these limits, but not necessarily inside the
          * MapView container yet.
          */
+        show();
+
         mapHeight = getMapHeight();
         mapWidth = getMapWidth();
         gameWorld.initLocationsOnMap();
@@ -215,5 +219,29 @@ Game extends Form implements Runnable
     {
         gameWorld.tick(elapsedMilliSecs);
         gameWorld.checkForAndHandleCollisions();
+    }
+
+    public void
+    resumeGame()
+    {
+        timer.schedule(elapsedMilliSecs, true, this);
+        gamePaused = false;
+        gameModeButton.setText("Pause");
+        controlSouth.repaint();
+    }
+
+    public void
+    pauseGame()
+    {
+        timer.cancel();
+        gamePaused = true;
+        gameModeButton.setText("  Play  ");
+        controlSouth.repaint();
+    }
+
+    public static boolean
+    gamePaused()
+    {
+        return gamePaused;
     }
 }

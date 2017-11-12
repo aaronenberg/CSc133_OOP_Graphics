@@ -340,10 +340,10 @@ GameWorld extends Observable
     toggleSound()
     {
         soundOn = !soundOn;
-        if (soundOn)
-            bgSound.play();
+        if (soundOn && !Game.gamePaused())
+            BGSound.play();
         else
-            bgSound.pause();
+            BGSound.pause();
         setChanged();
         notifyObservers();
     }

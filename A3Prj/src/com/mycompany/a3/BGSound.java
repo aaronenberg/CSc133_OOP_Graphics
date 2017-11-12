@@ -8,7 +8,7 @@ import java.io.InputStream;
 public class
 BGSound implements Runnable
 {
-    private Media media;
+    private static Media media;
 
     public
     BGSound(String fileName)
@@ -22,13 +22,13 @@ BGSound implements Runnable
         }
     }
 
-    public void
+    public static void
     play()
     {
         media.play();
     }
 
-    public void
+    public static void
     pause()
     {
         media.pause();
