@@ -29,6 +29,12 @@ ScoreView extends Container implements Observer
     public
     ScoreView()
     {
+        totalScoreValue.getAllStyles().setMarginRight(20);
+        astronautsRescuedValue.getAllStyles().setMarginRight(20);
+        astronautsRemainingValue.getAllStyles().setMarginRight(20);
+        aliensSnuckInValue.getAllStyles().setMarginRight(20);
+        aliensRemainingValue.getAllStyles().setMarginRight(20);
+
         add(totalScoreLabel);
         add(totalScoreValue);
         add(astronautsRescuedLabel);
@@ -60,12 +66,12 @@ ScoreView extends Container implements Observer
     public void
     update(Observable observable, Object arg)
     {
-        totalScoreValue.setText(         " " + GameWorld.getScore());
-        astronautsRescuedValue.setText(  " " + GameWorld.getAstronautsRescued());
-        aliensSnuckInValue.setText(      " " + GameWorld.getAliensSnuckIn());
-        astronautsRemainingValue.setText(" " + GameWorld.getAstronautsRemaining());
-        aliensRemainingValue.setText(    " " + GameWorld.getAliensRemaining());
-        soundValue.setText(              " " + checkSoundStatus(GameWorld.getSound()));
+        totalScoreValue.setText(         "" + GameWorld.getScore());
+        astronautsRescuedValue.setText(  "" + GameWorld.getAstronautsRescued());
+        aliensSnuckInValue.setText(      "" + GameWorld.getAliensSnuckIn());
+        astronautsRemainingValue.setText("" + GameWorld.getAstronautsRemaining());
+        aliensRemainingValue.setText(    "" + GameWorld.getAliensRemaining());
+        soundValue.setText(              "" + checkSoundStatus(GameWorld.getSound()));
 
         repaint();
 
