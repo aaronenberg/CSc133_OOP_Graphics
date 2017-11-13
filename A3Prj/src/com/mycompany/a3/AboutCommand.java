@@ -11,7 +11,7 @@ AboutCommand extends Command
     private String  aboutDialogBody = "Author: Aaron Enberg\n" +
                                        "Course: CSC133 Object-Oriented " +
                                        "Computer Graphics Programming\n" +
-                                       "version 2";
+                                       "version 3";
 
     public
     AboutCommand()
