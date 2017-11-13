@@ -23,7 +23,7 @@ public class
 GameWorld extends Observable
 {
     private static final int
-        INIT_ALIENS = 10,
+        INIT_ALIENS = 3,
         INIT_ASTRONAUTS = 4,
         ALIEN_BREACH_PENALTY = 10;
     private static int
