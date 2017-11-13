@@ -17,6 +17,8 @@ RescueCommand extends Command
     public void
     actionPerformed(ActionEvent evt)
     {
+        if (Game.gamePaused())
+            return;
         target.openSpaceshipDoor();
         System.out.println("The spaceship door opens...");
         if (!target.rescue())
