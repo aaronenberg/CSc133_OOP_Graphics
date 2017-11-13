@@ -7,7 +7,7 @@ public interface
 ISelectable
 {
     public void
-    setSelected(boolean yesNo);
+    setSelected(boolean selectedState);
 
     public boolean
     isSelected();
