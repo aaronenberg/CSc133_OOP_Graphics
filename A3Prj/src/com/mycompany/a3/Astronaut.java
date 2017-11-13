@@ -22,12 +22,12 @@ Astronaut extends Opponent implements ISelectable
     private static final int
             INIT_HEALTH = 5,
             SPEED_MULTIPLIER = 20,
-            ALIEN_ATTACK_DAMAGE = 1,
             FADE_COLOR = 25,
             HINT_OF_RED = 15,
             HINT_OF_GREEN = 15,
             MEDIUM_BLUE = 128;
     private int health;
+    private int no_of_collisions = 0;
     private boolean isSelected = false;
 
     public
@@ -48,7 +48,8 @@ Astronaut extends Opponent implements ISelectable
     private void
     updateHealth()
     {
-        health -= ALIEN_ATTACK_DAMAGE;
+        health = INIT_HEALTH - no_of_collisions;
+//        health -= ALIEN_ATTACK_DAMAGE;
     }
     private void
     updateSpeed()
@@ -56,6 +57,14 @@ Astronaut extends Opponent implements ISelectable
         super.setSpeed(health * SPEED_MULTIPLIER);
     }
 
+    public void
+    heal()
+    {
+        no_of_collisions = 0;
+        updateHealth();
+        updateSpeed();
+        super.setColor(HINT_OF_RED, HINT_OF_GREEN, MEDIUM_BLUE);
+    }
      // Astronauts with zero health left can not move, they are dead.
     @Override
     public void
@@ -84,18 +93,10 @@ Astronaut extends Opponent implements ISelectable
 
         g.setColor(getColor());
 
-        if (isSelected())
+        if (isSelected() && Game.gamePaused())
             g.drawPolygon(xPoints, yPoints, no_of_vertices);
         else
             g.fillPolygon(xPoints, yPoints, no_of_vertices);
-    }
-
-    @Override
-    public String
-    toString()
-    {
-        String opponentString = super.toString();
-        return "Astronaut: " + opponentString + " health=" + health;
     }
 
     /* 
@@ -109,6 +110,7 @@ Astronaut extends Opponent implements ISelectable
         ArrayList<ICollider> collisionsOpponent = ((Opponent) opponent).getCollisions();
 
         if ( (opponent instanceof Alien) && (health != 0) && (!collisions.contains(opponent)) ) { 
+            no_of_collisions++;
             updateHealth();
             updateSpeed();
             setColor( ColorUtil.red(getColor())   + FADE_COLOR,
@@ -147,6 +149,14 @@ Astronaut extends Opponent implements ISelectable
             return true;
         else
             return false;
+    }
+
+    @Override
+    public String
+    toString()
+    {
+        String opponentString = super.toString();
+        return "Astronaut: " + opponentString + " health=" + health;
     }
 
 }

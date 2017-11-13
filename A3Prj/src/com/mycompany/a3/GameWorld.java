@@ -270,6 +270,53 @@ GameWorld extends Observable
     }
 
     public boolean
+    healAstronaut()
+    {
+        boolean astronautHealed = false;
+        IIterator gameObjects = gameObjectCollection.getIterator();
+
+        // check there is at least one opponent to move
+        while (gameObjects.hasNext()) {
+            GameObject gameObject = gameObjects.getNext();
+
+            if (gameObject instanceof ISelectable) {
+                Astronaut astronaut = (Astronaut) gameObject;
+
+                if (astronaut.isSelected()) {
+                    astronaut.heal();
+                    astronautHealed = true;
+                    setChanged();
+                    notifyObservers();
+                }
+            }
+        }
+        return astronautHealed;
+    }
+
+    /*
+     * When an object is selected in pause mode,
+     * and game play is resumed without manually
+     * unselecting that object, we want to
+     * force that object to become unselected
+     * so that the next time we pause the game
+     * all objects are unselected.
+     */
+    public static void
+    clearSelected()
+    {
+        IIterator gameObjects = GameWorld.getGameObjectCollection().getIterator();
+        while (gameObjects.hasNext()) {
+            GameObject gameObject = gameObjects.getNext();
+
+            if (gameObject instanceof ISelectable) {
+                ISelectable astronaut = (ISelectable) gameObject;
+                if (astronaut.isSelected())
+                    astronaut.setSelected(false);
+            }
+        }
+    }
+
+    public boolean
     checkForAndHandleCollisions()
     {
         IIterator gameObjects1 = gameObjectCollection.getIterator();
