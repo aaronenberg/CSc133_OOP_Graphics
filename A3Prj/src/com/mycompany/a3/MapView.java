@@ -39,6 +39,8 @@ MapView extends Container implements Observer
     public void
     pointerPressed(int x, int y)
     {
+        if (!Game.gamePaused())
+            return;
         float xRelPrntOrigin = x - getParent().getAbsoluteX();
         float yRelPrntOrigin = y - getParent().getAbsoluteY();
         Point pPtrRelPrnt = new Point(xRelPrntOrigin, yRelPrntOrigin);
@@ -51,7 +53,7 @@ MapView extends Container implements Observer
             if (gameObject instanceof ISelectable) {
                 ISelectable astronaut = (ISelectable) gameObject;
 
-                if (astronaut.contains(pPtrRelPrnt, mapOriginRelPrnt) && Game.gamePaused())
+                if (astronaut.contains(pPtrRelPrnt, mapOriginRelPrnt))
                     astronaut.setSelected(true);
                 else
                     astronaut.setSelected(false);                    
