@@ -3,8 +3,6 @@ package com.mycompany.a3;
 import com.codename1.ui.CheckBox;
 import com.codename1.ui.Component;
 import com.codename1.ui.Container;
-import com.codename1.ui.Dialog;
-import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import com.codename1.ui.Toolbar;
 import com.codename1.ui.layouts.BorderLayout;
@@ -35,9 +33,6 @@ Game extends Form implements Runnable
         mapWidth;
     private static final int elapsedMilliSecs = 20;
     private static boolean gamePaused = false;
-    private String  exit           = "Exit";
-    private String  finalScoreDialogBody = "All astronauts have been rescued!\nThe spaceship flies back into space.\n\n Your final score: \n" + GameWorld.getScore();
-
     private static int 
         eKeyCode = 101,
         cKeyCode =  99,
